@@ -1,5 +1,7 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -13,6 +15,7 @@ import java.util.Map;
 @RestController
 public class FilmController {
     private static final String FILMS_PATH = "/films";
+    private static final Logger logger = LoggerFactory.getLogger(FilmController.class);
 
     private final Map<Long, Film> films;
 
@@ -27,16 +30,26 @@ public class FilmController {
 
     @PostMapping(FILMS_PATH)
     public void addFilm(@RequestBody Film newFilm) throws ValidationException {
-        if (!FilmValidator.validate(newFilm)) {
-            throw new ValidationException("Один из параметроф фильма не соответствует заданным условиям.");
+        if (newFilm == null || !FilmValidator.validate(newFilm)) {
+            logger.warn("addFilm: запрос не соответствует условиям. film = {}", newFilm);
+            throw new ValidationException("Параметры фильма не соответствует заданным условиям.");
         }
 
         newFilm.setId(IdGenerator.getNextId());
         films.put(newFilm.getId(), newFilm);
+        logger.info("addFilm: добавлен фильм с id = {}", newFilm.getId());
     }
 
     @PutMapping(FILMS_PATH)
-    public void updateFilm(@RequestBody Film newFilm) {
-        films.put(newFilm.getId(), newFilm);
+    public void updateFilm(@RequestBody Film newFilm) throws ValidationException {
+        if (newFilm == null) {
+            logger.warn("updateFilm: запрос не соответствует условиям. film = null");
+            throw new ValidationException("Пустой запрос.");
+        }
+
+        if (films.containsKey(newFilm.getId())) {
+            films.put(newFilm.getId(), newFilm);
+            logger.info("updateFilm: обновлен фильм с id = {}", newFilm.getId());
+        }
     }
 }
