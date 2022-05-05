@@ -50,6 +50,8 @@ public class FilmController {
         if (films.containsKey(newFilm.getId())) {
             films.put(newFilm.getId(), newFilm);
             logger.info("updateFilm: обновлен фильм с id = {}", newFilm.getId());
+        } else {
+            logger.warn("updateFilm: фильм не найден. film = {}", newFilm);
         }
     }
 }
