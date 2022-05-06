@@ -17,6 +17,7 @@ import java.util.Map;
 public class FilmController {
     private static final String FILMS_PATH = "/films";
     private static final Logger logger = LoggerFactory.getLogger(FilmController.class);
+    private static final IdGenerator idGenerator = new IdGenerator();
 
     private final Map<Long, Film> films;
 
@@ -30,19 +31,20 @@ public class FilmController {
     }
 
     @PostMapping(FILMS_PATH)
-    public void addFilm(@RequestBody Film newFilm) throws ValidationException {
+    public Film addFilm(@RequestBody Film newFilm) throws ValidationException {
         if (newFilm == null || !FilmValidator.validate(newFilm)) {
             logger.warn("addFilm: запрос не соответствует условиям. film = {}", newFilm);
             throw new ValidationException("Параметры фильма не соответствует заданным условиям.");
         }
 
-        newFilm.setId(IdGenerator.getNextId());
+        newFilm.setId(idGenerator.getNextId());
         films.put(newFilm.getId(), newFilm);
         logger.info("addFilm: добавлен фильм с id = {}", newFilm.getId());
+        return newFilm;
     }
 
     @PutMapping(FILMS_PATH)
-    public void updateFilm(@RequestBody Film newFilm) throws ValidationException {
+    public Film updateFilm(@RequestBody Film newFilm) throws ValidationException {
         if (newFilm == null) {
             logger.warn("updateFilm: запрос не соответствует условиям. film = null");
             throw new ValidationException("Пустой запрос.");
@@ -55,5 +57,7 @@ public class FilmController {
             logger.warn("updateFilm: фильм не найден. film = {}", newFilm);
             throw new UpdateException("Неверный id фильма");
         }
+
+        return newFilm;
     }
 }
