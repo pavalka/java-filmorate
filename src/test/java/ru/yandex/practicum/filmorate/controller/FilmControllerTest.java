@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.yandex.practicum.filmorate.exception.UpdateException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
@@ -38,6 +39,7 @@ class FilmControllerTest {
     void addFilmShouldThrowExceptionWhenAddNull() {
         assertThrows(ValidationException.class,
                                         () -> filmController.addFilm(null));
+        assertTrue(filmController.getAllFilms().isEmpty());
     }
 
     @Test
@@ -45,6 +47,7 @@ class FilmControllerTest {
         Film film = new Film("", "Description", LocalDate.of(2001, 2,14), 90);
 
         assertThrows(ValidationException.class, () -> filmController.addFilm(film));
+        assertTrue(filmController.getAllFilms().isEmpty());
     }
 
     @Test
@@ -52,6 +55,7 @@ class FilmControllerTest {
         Film film = new Film("Test film", "", LocalDate.of(2001,
                       2, 14), 90);
         assertThrows(ValidationException.class, () -> filmController.addFilm(film));
+        assertTrue(filmController.getAllFilms().isEmpty());
     }
 
     @Test
@@ -59,6 +63,7 @@ class FilmControllerTest {
         Film film = new Film("Test film", "Description".repeat(18) + "End", LocalDate.of(2001,
                       2, 14), 90);
         assertThrows(ValidationException.class, () -> filmController.addFilm(film));
+        assertTrue(filmController.getAllFilms().isEmpty());
     }
 
     @Test
@@ -66,12 +71,14 @@ class FilmControllerTest {
         Film film = new Film("Test film", "Description", LocalDate.of(1895, 12,
                   17), 90);
         assertThrows(ValidationException.class, () -> filmController.addFilm(film));
+        assertTrue(filmController.getAllFilms().isEmpty());
     }
 
     @Test
     void addFilmShouldThrowExceptionWhenAddFilmWithDateAfterNow() {
         Film film = new Film("Test film", "Description", LocalDate.now().plusDays(1), 90);
         assertThrows(ValidationException.class, () -> filmController.addFilm(film));
+        assertTrue(filmController.getAllFilms().isEmpty());
     }
 
     @Test
@@ -79,6 +86,7 @@ class FilmControllerTest {
         Film film = new Film("Test Film", "Description", LocalDate.of(2001, 2, 14),
                              -1);
         assertThrows(ValidationException.class, () -> filmController.addFilm(film));
+        assertTrue(filmController.getAllFilms().isEmpty());
     }
 
     @Test
@@ -92,6 +100,18 @@ class FilmControllerTest {
     @Test
     void updateFilmShouldThrowExceptionWhenUpdateNull() {
         assertThrows(ValidationException.class, () -> filmController.updateFilm(null));
+    }
+
+    @Test
+    void updateFilmShouldThrowExceptionWhenFilmIdIsWrong() {
+        Film film = new Film("Test film", "Description", LocalDate.of(2001, 2, 14),
+                90);
+        assertDoesNotThrow(() -> filmController.addFilm(film));
+
+        Film newFilm = new Film("Test film", "Description - 1", LocalDate.of(2001, 2,
+                14), 90);
+        newFilm.setId(100000);
+        assertThrows(UpdateException.class, () -> filmController.updateFilm(newFilm));
     }
 
     @Test
