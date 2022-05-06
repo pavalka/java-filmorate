@@ -14,6 +14,6 @@ public class User {
     @EqualsAndHashCode.Include private long id;
     private final String email;
     private final String login;
-    private String name;
+    private final String name;
     private final LocalDate birthday;
 }
