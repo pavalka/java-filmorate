@@ -26,6 +26,6 @@ public class UserValidator {
         LocalDate currentDate = LocalDate.now();
 
         return !(user.getEmail().isBlank() || !user.getEmail().contains(SPECIAL_SYMBOL) || user.getLogin().isBlank()
-               || !user.getLogin().contains(SPACE_SYMBOL) || user.getBirthday().isAfter(currentDate));
+               || user.getLogin().contains(SPACE_SYMBOL) || user.getBirthday().isAfter(currentDate));
     }
 }
