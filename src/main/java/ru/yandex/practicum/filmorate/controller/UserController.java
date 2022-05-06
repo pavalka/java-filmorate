@@ -17,6 +17,7 @@ import java.util.Map;
 public class UserController {
     private static final String USERS_PATH = "/users";
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+    private static final IdGenerator idGenerator = new IdGenerator();
 
     private final Map<Long, User> users;
 
@@ -30,19 +31,20 @@ public class UserController {
     }
 
     @PostMapping(USERS_PATH)
-    public void addUser(@RequestBody User newUser) throws ValidationException {
+    public User addUser(@RequestBody User newUser) throws ValidationException {
         if (newUser == null || !UserValidator.validate(newUser)) {
             logger.warn("addUser: запрос не соответствует условиям. user = {}", newUser);
             throw new ValidationException("Параметры пользователя не соответствуют заданным условиям");
         }
 
-        newUser.setId(IdGenerator.getNextId());
+        newUser.setId(idGenerator.getNextId());
         users.put(newUser.getId(), newUser);
         logger.info("addUser: создан новый пользователь с id = {}", newUser.getId());
+        return newUser;
     }
 
     @PutMapping(USERS_PATH)
-    public void updateUser(@RequestBody User newUser) throws ValidationException {
+    public User updateUser(@RequestBody User newUser) throws ValidationException {
         if (newUser == null) {
             logger.warn("updateUser: запрос не соответствует условиям. user = null");
             throw new ValidationException("Пустой запрос");
@@ -54,5 +56,7 @@ public class UserController {
             logger.warn("updateUser: пользователь не найден. user = {}", newUser);
             throw new UpdateException("Неверный id пользователя");
         }
+
+        return newUser;
     }
 }
