@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exception.UpdateException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.util.IdGenerator;
@@ -52,6 +53,7 @@ public class FilmController {
             logger.info("updateFilm: обновлен фильм с id = {}", newFilm.getId());
         } else {
             logger.warn("updateFilm: фильм не найден. film = {}", newFilm);
+            throw new UpdateException("Неверный id фильма");
         }
     }
 }
