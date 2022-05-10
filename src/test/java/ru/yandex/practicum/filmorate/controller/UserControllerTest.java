@@ -8,7 +8,11 @@ import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 
 class UserControllerTest {
 
@@ -26,8 +30,7 @@ class UserControllerTest {
 
     @Test
     void getAllUserShouldReturnUserCollectionWhenOneUserIsAdded() {
-        User user = new User("test@email.ru", "user_login", "user_name", LocalDate.of(1990,
-                      3, 12));
+        User user = new User("test@email.ru", "user_login", "user_name", LocalDate.of(1990, 3, 12));
         assertDoesNotThrow(() -> userController.addUser(user));
         assertEquals(1, userController.getAllUsers().size());
     }
@@ -39,40 +42,35 @@ class UserControllerTest {
 
     @Test
     void addUserShouldThrowExceptionWhenAddUserWithEmptyEmail() {
-        User user = new User("", "user_login", "user_name", LocalDate.of(1990, 3,
-                  12));
+        User user = new User("", "user_login", "user_name", LocalDate.of(1990, 3, 12));
         assertThrows(ValidationException.class, () -> userController.addUser(user));
         assertTrue(userController.getAllUsers().isEmpty());
     }
 
     @Test
     void addUserShouldThrowExceptionWhenAddUserWithWrongEmail() {
-        User user = new User("user_email.ru", "user_login", "user_name", LocalDate.of(1990, 3,
-                12));
+        User user = new User("user_email.ru", "user_login", "user_name", LocalDate.of(1990, 3, 12));
         assertThrows(ValidationException.class, () -> userController.addUser(user));
         assertTrue(userController.getAllUsers().isEmpty());
     }
 
     @Test
     void addUserShouldThrowExceptionWhenAddUserWithEmptyLogin() {
-        User user = new User("user@email.ru", "", "user_name", LocalDate.of(1990, 3,
-                  12));
+        User user = new User("user@email.ru", "", "user_name", LocalDate.of(1990, 3, 12));
         assertThrows(ValidationException.class, () -> userController.addUser(user));
         assertTrue(userController.getAllUsers().isEmpty());
     }
 
     @Test
     void addUserShouldThrowExceptionWhenAddUserWithWrongLogin() {
-        User user = new User("user@email.ru", "user login", "user_name", LocalDate.of(1990,
-                      3, 12));
+        User user = new User("user@email.ru", "user login", "user_name", LocalDate.of(1990, 3, 12));
         assertThrows(ValidationException.class, () -> userController.addUser(user));
         assertTrue(userController.getAllUsers().isEmpty());
     }
 
     @Test
     void addUserShouldAddUserWhenUserNameIsEmpty() {
-        User user = new User("user@email.ru", "user_login", "", LocalDate.of(1990, 3,
-                  12));
+        User user = new User("user@email.ru", "user_login", "", LocalDate.of(1990, 3, 12));
         assertDoesNotThrow(() -> userController.addUser(user));
         assertEquals(1, userController.getAllUsers().size());
     }
@@ -86,8 +84,7 @@ class UserControllerTest {
 
     @Test
     void addUserShouldAddUser() {
-        User user = new User("user@email.ru", "user_login", "user_name", LocalDate.of(1990,
-                             3, 12));
+        User user = new User("user@email.ru", "user_login", "user_name", LocalDate.of(1990, 3, 12));
         assertDoesNotThrow(() -> userController.addUser(user));
         assertEquals(1, userController.getAllUsers().size());
     }
@@ -99,8 +96,7 @@ class UserControllerTest {
 
     @Test
     void updateUserShouldThrowExceptionWhenUserIdIsWrong() {
-        User user = new User("user@email.ru", "user_login", "user_name", LocalDate.of(1990,
-                             3, 12));
+        User user = new User("user@email.ru", "user_login", "user_name", LocalDate.of(1990, 3, 12));
         assertDoesNotThrow(() -> userController.addUser(user));
         user.setId(100000);
         assertThrows(UpdateException.class, () -> userController.updateUser(user));
@@ -108,13 +104,11 @@ class UserControllerTest {
 
     @Test
     void updateUserShouldUpdateUser() {
-        User user = new User("user@email.ru", "user_login", "user_name", LocalDate.of(1990,
-                3, 12));
+        User user = new User("user@email.ru", "user_login", "user_name", LocalDate.of(1990, 3, 12));
 
         assertDoesNotThrow(() -> userController.addUser(user));
 
-        User newUser = new User("user@email.ru", "user_login", "new_user_name", LocalDate.of(1990,
-                3, 12));
+        User newUser = new User("user@email.ru", "user_login", "new_user_name", LocalDate.of(1990, 3, 12));
 
         newUser.setId(user.getId());
         assertDoesNotThrow(() -> userController.updateUser(newUser));
