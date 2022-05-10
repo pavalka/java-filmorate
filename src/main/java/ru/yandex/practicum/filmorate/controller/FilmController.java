@@ -2,7 +2,11 @@ package ru.yandex.practicum.filmorate.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.filmorate.exception.UpdateException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -19,11 +23,7 @@ public class FilmController {
     private static final Logger logger = LoggerFactory.getLogger(FilmController.class);
     private static final IdGenerator idGenerator = new IdGenerator();
 
-    private final Map<Long, Film> films;
-
-    public FilmController() {
-        this.films = new HashMap<>();
-    }
+    private final Map<Long, Film> films = new HashMap<>();
 
     @GetMapping(FILMS_PATH)
     public Collection<Film> getAllFilms() {
