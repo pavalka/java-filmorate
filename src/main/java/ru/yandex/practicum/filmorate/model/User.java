@@ -11,8 +11,8 @@ import java.time.LocalDate;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Data
 public class User {
-    @EqualsAndHashCode.Include private long id;
-    private final String email;
+    private long id;
+    @EqualsAndHashCode.Include private final String email;
     private final String login;
     private final String name;
     private final LocalDate birthday;
