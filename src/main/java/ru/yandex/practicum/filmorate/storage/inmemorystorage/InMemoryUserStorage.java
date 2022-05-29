@@ -1,8 +1,8 @@
 package ru.yandex.practicum.filmorate.storage.inmemorystorage;
 
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exception.NullArgumentException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.AddToStorageException;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.Collection;
@@ -13,29 +13,7 @@ import java.util.Collection;
 @Component
 public class InMemoryUserStorage extends AbstractInMemoryStorage<User, Long> implements UserStorage {
 
-    /**
-     * Метод добавляет item в хранилище. При возникновении ошибки в процеесе сохранения метод генерирует исключение
-     *{@link AddToStorageException}.
-     *
-     * @param key  ключ, под которым будет сохранено item;
-     * @param item объект для добавления в хранилище;
-     */
-    @Override
-    public void add(Long key, User item) throws AddToStorageException {
-        if (key == null || item == null) {
-            throw new AddToStorageException("Объект равен null");
-        }
-
-        // Проверяем есть ли уже в хранилище такой же пользователь (пользователь с таким же email)
-
-        if (storage.containsValue(item)) {
-            throw new AddToStorageException(String.format("Пользователь с email = %s уже существует.", item.getEmail()));
-        }
-
-        storage.put(key, item);
-    }
-
-    /**
+     /**
      * Метод возвращает список всех пользователей, находящихся в хранилище в виде Collection<>. Если в хранилище нет ни
      * одного пользователя, то метод вернет пустой список.
      *
@@ -45,5 +23,22 @@ public class InMemoryUserStorage extends AbstractInMemoryStorage<User, Long> imp
     @Override
     public Collection<User> getAllUsers() {
         return storage.values();
+    }
+
+    /**
+     * Метод проверяет присутствует ли в хранилище пользователь user. Если этот пользователь есть в хранилище
+     * пользователей, то метод вернет true. В противном случает метод вернет false.
+     *
+     * @param user пользователь, которого нужно проверить;
+     * @return если этот пользователь есть в хранилище пользователей, то метод вернет true; в противном случает метод
+     * вернет false.
+     */
+    @Override
+    public boolean isUserPresent(User user) {
+        if (user == null) {
+            throw new NullArgumentException("Объект равен null");
+        }
+
+        return storage.containsValue(user);
     }
 }
