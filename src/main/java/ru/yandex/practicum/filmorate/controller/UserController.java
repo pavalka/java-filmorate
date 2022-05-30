@@ -50,7 +50,7 @@ public class UserController {
      * @throws UserWithSameEmailException   генерируется если в хранилище есть пользователь с email = user.email;
      */
     @PostMapping(USERS_PATH)
-    public User addUser(@RequestBody User newUser) throws ValidationException, UserWithSameEmailException {
+    public User addUser(@RequestBody User newUser) {
         newUser = userService.addUser(newUser);
         logger.info("addUser: создан новый пользователь с id = {}", newUser.getId());
         return newUser;
@@ -65,7 +65,7 @@ public class UserController {
      * @throws UserNotFoundException    генерируется если пользователь newUser не найден в хранилище;
      */
     @PutMapping(USERS_PATH)
-    public User updateUser(@RequestBody User newUser) throws ValidationException, UserNotFoundException {
+    public User updateUser(@RequestBody User newUser) {
         userService.updateUser(newUser);
         logger.info("updateUser: обновлен пользователь с id = {}", newUser.getId());
         return newUser;
@@ -79,7 +79,7 @@ public class UserController {
      * @throws UserNotFoundException    генерируется если пользователь не найден в хранилище;
      */
     @GetMapping(USERS_PATH + "/{id}")
-    public User getUser(@PathVariable("id") long userId) throws UserNotFoundException {
+    public User getUser(@PathVariable("id") long userId) {
         return userService.getUser(userId);
     }
 
@@ -92,7 +92,7 @@ public class UserController {
      *                                  не найден в хранилище.
      */
     @PutMapping(USERS_PATH + "/{id}/friends/{friendId}")
-    public void addFriend(@PathVariable("id") long userId, @PathVariable long friendId) throws UserNotFoundException {
+    public void addFriend(@PathVariable("id") long userId, @PathVariable long friendId) {
         userService.addFriend(userId, friendId);
         logger.info("addFriend: пользователь с id = {} добавлен в друзья пользователя с id = {}", friendId, userId);
     }
@@ -106,8 +106,7 @@ public class UserController {
      *                                  не найден в хранилище.
      */
     @DeleteMapping(USERS_PATH + "/{id}/friends/{friendId}")
-    public void deleteFriend(@PathVariable("id") long userId, @PathVariable long friendId)
-                throws UserNotFoundException {
+    public void deleteFriend(@PathVariable("id") long userId, @PathVariable long friendId) {
         userService.deleteFriend(userId, friendId);
         logger.info("deleteFriend: пользователь с id = {} удален из друзей пользователя с id = {}", friendId, userId);
     }
@@ -123,8 +122,7 @@ public class UserController {
      *                                  не найден в хранилище.
      */
     @GetMapping(USERS_PATH + "/{id}/friends/common/{otherId}")
-    public Collection<User> getCommonFriends(@PathVariable("id") long userIdOne, @PathVariable("otherId") long userIdTwo)
-                            throws UserNotFoundException {
+    public Collection<User> getCommonFriends(@PathVariable("id") long userIdOne, @PathVariable("otherId") long userIdTwo) {
         return userService.getCommonFriends(userIdOne, userIdTwo);
     }
 
@@ -137,7 +135,7 @@ public class UserController {
      *                                  не найден в хранилище.
      */
     @GetMapping(USERS_PATH + "/{id}/friends")
-    public Collection<User> getUserFriends(@PathVariable("id") long userId) throws UserNotFoundException {
+    public Collection<User> getUserFriends(@PathVariable("id") long userId) {
         return userService.getUserFriends(userId);
     }
 }

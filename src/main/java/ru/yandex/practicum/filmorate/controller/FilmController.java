@@ -50,7 +50,7 @@ public class FilmController {
      * @throws ValidationException  генерируется если фильм не соответствует заданным условиям;
      */
     @PostMapping(FILMS_PATH)
-    public Film addFilm(@RequestBody Film newFilm) throws ValidationException {
+    public Film addFilm(@RequestBody Film newFilm) {
         newFilm = filmService.addFilm(newFilm);
         logger.info("addFilm: добавлен фильм с id = {}", newFilm.getId());
         return newFilm;
@@ -65,7 +65,7 @@ public class FilmController {
      * @throws FilmNotFoundException    генерируется если фильм newFilm не найден в хранилище;
      */
     @PutMapping(FILMS_PATH)
-    public Film updateFilm(@RequestBody Film newFilm) throws ValidationException, FilmNotFoundException {
+    public Film updateFilm(@RequestBody Film newFilm) {
         filmService.updateFilm(newFilm);
         logger.info("updateFilm: обновлен фильм с id = {}", newFilm.getId());
         return newFilm;
@@ -79,7 +79,7 @@ public class FilmController {
      * @throws FilmNotFoundException    генерируется если фильм с идентификатором id не найден в хранилище;
      */
     @GetMapping(FILMS_PATH + "/{id}")
-    public Film getFilm(@PathVariable long id) throws FilmNotFoundException {
+    public Film getFilm(@PathVariable long id) {
         return filmService.getFilm(id);
     }
 
@@ -92,8 +92,7 @@ public class FilmController {
      * @throws UserNotFoundException    генерируется если пользователь с идентификатором userId не найден;
      */
     @PutMapping(FILMS_PATH + "/{id}/like/{userId}")
-    public void addLike(@PathVariable("id") long filmId, @PathVariable long userId) throws FilmNotFoundException
-                        , UserNotFoundException {
+    public void addLike(@PathVariable("id") long filmId, @PathVariable long userId) {
         filmService.addLike(filmId, userId);
         logger.info("addLike: Добавлен лайк фильму {} от пользователя {}", filmId, userId);
     }
@@ -107,8 +106,7 @@ public class FilmController {
      * @throws UserNotFoundException    генерируется если пользователь с идентификатором userId не найден в хранилище;
      */
     @DeleteMapping(FILMS_PATH + "/{id}/like/{userId}")
-    public void deleteLike(@PathVariable("id") long filmId, @PathVariable long userId) throws FilmNotFoundException
-                           , UserNotFoundException {
+    public void deleteLike(@PathVariable("id") long filmId, @PathVariable long userId) {
         filmService.deleteLike(filmId, userId);
         logger.info("deleteLike: удален лайк пользователя {} у фильма {}", userId, filmId);
     }

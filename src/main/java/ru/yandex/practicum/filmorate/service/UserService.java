@@ -60,7 +60,7 @@ public class UserService {
      * @throws UserWithSameEmailException   генерируется если в хранилище есть пользователь с email = user.email;
      * @return  пользователь с присвоенным ему идентификатором.
      */
-    public User addUser(User user) throws ValidationException, UserWithSameEmailException {
+    public User addUser(User user) {
         if (user == null || !UserValidator.validate(user)) {
             throw new ValidationException("addUser: Параметры пользователя не соответствуют заданным условиям");
         }
@@ -84,7 +84,7 @@ public class UserService {
      * @throws ValidationException  генерируется если user = null или не удовлетворяет заданным условиям;
      * @throws UserNotFoundException   генерируется, если user нет в хранилище;
      */
-    public void updateUser(User user) throws ValidationException, UserNotFoundException {
+    public void updateUser(User user) {
         if (user == null || !UserValidator.validate(user)) {
             throw new ValidationException("updateUser: Параметры пользователя не соответствуют заданным условиям");
         }
@@ -104,7 +104,7 @@ public class UserService {
      * @return  пользователь с идентификатором раным userId;
      * @throws UserNotFoundException    генерируется если пользователя с идентификатором userId нет в хранилище;
      */
-    public User getUser(long userId) throws UserNotFoundException {
+    public User getUser(long userId) {
         return userStorage.get(userId).orElseThrow(() -> new UserNotFoundException(
                 String.format("getUser: Пользователь с id = %d не найден.", userId))
                 );
@@ -121,7 +121,7 @@ public class UserService {
      * @throws UserNotFoundException    генерируется если какой-либо из пользователей с идентификаторами userIdOne или
      *                                  userIdTwo не найден в хранилище.
      */
-    public void addFriend(long userIdOne, long userIdTwo) throws UserNotFoundException {
+    public void addFriend(long userIdOne, long userIdTwo) {
         if (!userStorage.isKeyPresent(userIdOne)) {
             throw new UserNotFoundException(String.format("addFriend: Пользователь с id = %d не найден.", userIdOne));
         }
@@ -149,7 +149,7 @@ public class UserService {
      * @param userIdTwo идентификатор второго пользователя;
      * @throws UserNotFoundException    генерируется если одного из пользователей нет в хранилище;
      */
-    public void deleteFriend(long userIdOne, long userIdTwo) throws UserNotFoundException {
+    public void deleteFriend(long userIdOne, long userIdTwo) {
         if (!userStorage.isKeyPresent(userIdOne)) {
             throw new UserNotFoundException(String.format("deleteFriend: Пользователь с id = %d не найден в хранилище.",
                                             userIdOne));
@@ -189,7 +189,7 @@ public class UserService {
      * @return  список общих друзей; если общих друзей нет, то метод вернет пустой список;
      * @throws UserNotFoundException    генерируется если одного или обоих пользователей нет в хранилище;
      */
-    public Collection<User> getCommonFriends(long userIdOne, long userIdTwo) throws UserNotFoundException {
+    public Collection<User> getCommonFriends(long userIdOne, long userIdTwo) {
         if (!userStorage.isKeyPresent(userIdOne)) {
             throw new UserNotFoundException(String.format("getCommonFriends: Пользователь с id = %d не найден в " +
                                             "хранилище.", userIdOne));
@@ -229,7 +229,7 @@ public class UserService {
      * @return  список друзей пользователя; если у этого пользователя нет друзей, то метод вернет пустой список;
      * @throws UserNotFoundException    генерируется если пользователя с идентификатором userId нет в хранилище;
      */
-    public Collection<User> getUserFriends(long userId) throws UserNotFoundException {
+    public Collection<User> getUserFriends(long userId) {
         if (!userStorage.isKeyPresent(userId)) {
             throw new UserNotFoundException(String.format("Пользователь с id = %d не найден в хранилище.", userId));
         }

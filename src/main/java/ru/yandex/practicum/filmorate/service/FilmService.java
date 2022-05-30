@@ -50,7 +50,7 @@ public class FilmService {
      * @throws ValidationException  генерируется если film = null или если film не удовлетворяет заданным условиям;
      * @return  фильм с присвоенным ему идентификатором.
      */
-    public Film addFilm(Film film) throws ValidationException {
+    public Film addFilm(Film film) {
         if (film == null || !FilmValidator.validate(film)) {
             throw new ValidationException("addFilm: Параметры фильма не соответствует заданным условиям.");
         }
@@ -67,7 +67,7 @@ public class FilmService {
      * @throws ValidationException  генерируется если film = null или если film не удовлетворяет заданным условиям;
      * @throws FilmNotFoundException    генерируется, если film нет в хранилище;
      */
-    public void updateFilm(Film film) throws ValidationException, FilmNotFoundException {
+    public void updateFilm(Film film) {
         if (film == null || !FilmValidator.validate(film)) {
             throw new ValidationException("updateFilm: Параметры фильма не соответствует заданным условиям.");
         }
@@ -87,7 +87,7 @@ public class FilmService {
      * @return  фильм с идентификатором filmId;
      * @throws FilmNotFoundException    генерируется если фильм с идентификатором filmId не найден в хранилище фильмов;
      */
-    public Film getFilm(long filmId) throws FilmNotFoundException {
+    public Film getFilm(long filmId) {
         return filmStorage.get(filmId).orElseThrow(() -> new FilmNotFoundException(
                 String.format("getFilm: Фильм с id = %d не найден", filmId))
                 );
@@ -98,11 +98,10 @@ public class FilmService {
      * проверяет, что указанные фильм и пользователь существуют в хранилищах. Если filmId нет в хранилище фильмов, то
      * метод сгенерирует исключение {@link FilmNotFoundException}. Если userId нет в хранилище пользователь, то будет
      * сгенерировано исключение {@link UserNotFoundException}.
-     *
-     *  @param filmId    идентификатор фильма, которуму добавляется лайк;
+     *   @param filmId    идентификатор фильма, которуму добавляется лайк;
      *  @param userId    идентификатор пользователя, который ставит лайк;
      */
-    public void addLike(long filmId, long userId) throws FilmNotFoundException, UserNotFoundException {
+    public void addLike(long filmId, long userId) {
         if (!userStorage.isKeyPresent(userId)) {
             throw new UserNotFoundException(String.format("addLike: Пользователь с id = %d не найден.", userId));
         }
@@ -125,7 +124,7 @@ public class FilmService {
      * @throws FilmNotFoundException    генерируется, если filmId не найден в хранилище фильмов;
      * @throws UserNotFoundException    генерируется, если userId не найден в хранилище пользователей.
      */
-    public void deleteLike(long filmId, long userId) throws FilmNotFoundException, UserNotFoundException {
+    public void deleteLike(long filmId, long userId) {
         if (!userStorage.isKeyPresent(userId)) {
             throw new UserNotFoundException(String.format("deleteLike: Пользователь с id = %d не найден.", userId));
         }
