@@ -7,7 +7,7 @@ import ru.yandex.practicum.filmorate.model.Friends;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.FriendsStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
-import ru.yandex.practicum.filmorate.util.UserIdGenerator;
+import ru.yandex.practicum.filmorate.util.IdGenerator;
 import ru.yandex.practicum.filmorate.validator.UserValidator;
 
 import java.util.ArrayList;
@@ -23,17 +23,16 @@ import java.util.stream.Collectors;
 public class UserService {
     private final UserStorage userStorage;
     private final FriendsStorage friendsStorage;
-    private final UserIdGenerator idGenerator;
+    private final IdGenerator idGenerator;
 
     /**
      * Конструктор класса.
-     *
-     * @param userStorage   хранилище пользователей;
+     *  @param userStorage   хранилище пользователей;
      * @param friendsStorage    хранилище списка друзей;
      * @param idGenerator   генератор идентификаторов;
      */
     @Autowired
-    public UserService(UserStorage userStorage, FriendsStorage friendsStorage, UserIdGenerator idGenerator) {
+    public UserService(UserStorage userStorage, FriendsStorage friendsStorage, IdGenerator idGenerator) {
         this.userStorage = userStorage;
         this.friendsStorage = friendsStorage;
         this.idGenerator = idGenerator;
