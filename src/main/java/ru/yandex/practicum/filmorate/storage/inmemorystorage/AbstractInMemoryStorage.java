@@ -42,21 +42,4 @@ public abstract class AbstractInMemoryStorage<T, K> implements Storage<T, K> {
 
         return Optional.ofNullable(storage.get(key));
     }
-
-    /**
-     * Метод проверяет есть ли в хранилище объект с ключом key. Если объект присутствует в хранилище, то метод вернет
-     * true. В противном случает возвращаемое значение - false.
-     *
-     * @param key ключ, который нужно проверить;
-     * @return если объект присутствует в хранилище, то метод вернет true; в противном случает возвращаемое значение
-     * - false.
-     */
-    @Override
-    public boolean isKeyPresent(K key) {
-        if (key == null) {
-            throw new NullArgumentException("Объект равен null.");
-        }
-
-        return storage.containsKey(key);
-    }
 }
