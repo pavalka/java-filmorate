@@ -52,7 +52,7 @@ public class FilmService {
      */
     public Film addFilm(Film film) {
         if (film == null || !FilmValidator.validate(film)) {
-            throw new ValidationException("addFilm: Параметры фильма не соответствует заданным условиям.");
+            throw new ValidationException("Параметры фильма не соответствует заданным условиям.");
         }
 
         film.setId(idGenerator.getNextId());
@@ -69,13 +69,10 @@ public class FilmService {
      */
     public void updateFilm(Film film) {
         if (film == null || !FilmValidator.validate(film)) {
-            throw new ValidationException("updateFilm: Параметры фильма не соответствует заданным условиям.");
+            throw new ValidationException("Параметры фильма не соответствует заданным условиям.");
         }
 
-        if (!filmStorage.isKeyPresent(film.getId())) {
-            throw new FilmNotFoundException(String.format("updateFilm: Фильм с id = %d не найден в хранилище."
-                                            , film.getId()));
-        }
+        getFilm(film.getId());
         filmStorage.put(film.getId(), film);
     }
 
@@ -89,7 +86,7 @@ public class FilmService {
      */
     public Film getFilm(long filmId) {
         return filmStorage.get(filmId).orElseThrow(() -> new FilmNotFoundException(
-                String.format("getFilm: Фильм с id = %d не найден", filmId))
+                String.format("Фильм с id = %d не найден", filmId))
                 );
     }
 
@@ -102,13 +99,11 @@ public class FilmService {
      *  @param userId    идентификатор пользователя, который ставит лайк;
      */
     public void addLike(long filmId, long userId) {
-        if (!userStorage.isKeyPresent(userId)) {
-            throw new UserNotFoundException(String.format("addLike: Пользователь с id = %d не найден.", userId));
-        }
+        userStorage.get(userId).orElseThrow(() -> new UserNotFoundException(String.format(
+                                                  "Пользователь с id = %d не найден.", userId))
+                                            );
 
-        Film film = filmStorage.get(filmId).orElseThrow(() -> new FilmNotFoundException(String.format(
-                                                              "addLike: Фильм с id = %d не найден.", filmId))
-                                    );
+        Film film = getFilm(filmId);
         film.setRate(film.getRate() + 1);
         filmStorage.put(filmId, film);
     }
@@ -125,13 +120,11 @@ public class FilmService {
      * @throws UserNotFoundException    генерируется, если userId не найден в хранилище пользователей.
      */
     public void deleteLike(long filmId, long userId) {
-        if (!userStorage.isKeyPresent(userId)) {
-            throw new UserNotFoundException(String.format("deleteLike: Пользователь с id = %d не найден.", userId));
-        }
+        userStorage.get(userId).orElseThrow(() -> new UserNotFoundException(String.format(
+                                                  "Пользователь с id = %d не найден.", userId))
+                                            );
 
-        Film film = filmStorage.get(filmId).orElseThrow(() -> new FilmNotFoundException(String.format(
-                                                              "deleteLike: Фильм с id = %d не найден.", filmId))
-                                    );
+        Film film = getFilm(filmId);
 
         film.setRate(film.getRate() - 1);
         filmStorage.put(filmId, film);
