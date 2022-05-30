@@ -23,18 +23,30 @@ public class UserControllerExceptionHandler {
     @ExceptionHandler(value = {ValidationException.class, UserWithSameEmailException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public void handleValidationException(Exception ex) {
-        logger.warn(ex.getMessage());
+        logWarn(ex);
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public void handleUserNotFoundException(UserNotFoundException ex) {
-        logger.warn(ex.getMessage());
+        logWarn(ex);
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public void handleOtherExceptions(Throwable ex) {
-        logger.error(ex.getMessage());
+        logError(ex);
+    }
+
+    private void logWarn(Throwable ex) {
+        StackTraceElement[] stackTrace = ex.getStackTrace();
+        logger.warn("{}::{}.{} : {}", ex.getClass().getName(), stackTrace[0].getClassName(),
+                    stackTrace[0].getMethodName(), ex.getMessage());
+    }
+
+    private void logError(Throwable ex) {
+        StackTraceElement[] stackTrace = ex.getStackTrace();
+        logger.error("{}::{}.{} : {}", ex.getClass().getName(), stackTrace[0].getClassName(),
+                stackTrace[0].getMethodName(), ex.getMessage());
     }
 }
