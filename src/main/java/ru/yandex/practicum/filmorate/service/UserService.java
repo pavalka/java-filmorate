@@ -62,14 +62,14 @@ public class UserService {
      */
     public User addUser(User user) {
         if (user == null || !UserValidator.validate(user)) {
-            throw new ValidationException("addUser: Параметры пользователя не соответствуют заданным условиям");
+            throw new ValidationException("Параметры пользователя не соответствуют заданным условиям");
         }
 
         if (!userStorage.isUserPresent(user)) {
             user.setId(idGenerator.getNextId());
             userStorage.put(user.getId(), user);
         } else {
-            throw new UserWithSameEmailException(String.format("addUser: Пользователь с email = %s уже существует " +
+            throw new UserWithSameEmailException(String.format("Пользователь с email = %s уже существует " +
                                                  "в хранилище.", user.getEmail()));
         }
 
@@ -86,13 +86,10 @@ public class UserService {
      */
     public void updateUser(User user) {
         if (user == null || !UserValidator.validate(user)) {
-            throw new ValidationException("updateUser: Параметры пользователя не соответствуют заданным условиям");
+            throw new ValidationException("Параметры пользователя не соответствуют заданным условиям");
         }
 
-        if (!userStorage.isKeyPresent(user.getId())) {
-            throw new UserNotFoundException(String.format("updateUser: Пользователь с id = %d не найден в хранилище.",
-                                            user.getId()));
-        }
+        getUser(user.getId());
         userStorage.put(user.getId(), user);
     }
 
@@ -106,7 +103,7 @@ public class UserService {
      */
     public User getUser(long userId) {
         return userStorage.get(userId).orElseThrow(() -> new UserNotFoundException(
-                String.format("getUser: Пользователь с id = %d не найден.", userId))
+                String.format("Пользователь с id = %d не найден.", userId))
                 );
     }
 
@@ -122,13 +119,8 @@ public class UserService {
      *                                  userIdTwo не найден в хранилище.
      */
     public void addFriend(long userIdOne, long userIdTwo) {
-        if (!userStorage.isKeyPresent(userIdOne)) {
-            throw new UserNotFoundException(String.format("addFriend: Пользователь с id = %d не найден.", userIdOne));
-        }
-
-        if (!userStorage.isKeyPresent(userIdTwo)) {
-            throw new UserNotFoundException(String.format("addFriend: Пользователь с id = %d не найден.", userIdTwo));
-        }
+        getUser(userIdOne);
+        getUser(userIdTwo);
 
         Friends friends = friendsStorage.get(userIdOne).orElseGet(() -> new Friends(userIdOne));
 
@@ -150,15 +142,8 @@ public class UserService {
      * @throws UserNotFoundException    генерируется если одного из пользователей нет в хранилище;
      */
     public void deleteFriend(long userIdOne, long userIdTwo) {
-        if (!userStorage.isKeyPresent(userIdOne)) {
-            throw new UserNotFoundException(String.format("deleteFriend: Пользователь с id = %d не найден в хранилище.",
-                                            userIdOne));
-        }
-
-        if (!userStorage.isKeyPresent(userIdTwo)) {
-            throw new UserNotFoundException(String.format("deleteFriend: Пользователь с id = %d не найден в хранилище.",
-                                            userIdTwo));
-        }
+        getUser(userIdOne);
+        getUser(userIdTwo);
 
         Optional<Friends> wrappedFriends = friendsStorage.get(userIdOne);
         Friends friends;
@@ -190,15 +175,8 @@ public class UserService {
      * @throws UserNotFoundException    генерируется если одного или обоих пользователей нет в хранилище;
      */
     public Collection<User> getCommonFriends(long userIdOne, long userIdTwo) {
-        if (!userStorage.isKeyPresent(userIdOne)) {
-            throw new UserNotFoundException(String.format("getCommonFriends: Пользователь с id = %d не найден в " +
-                                            "хранилище.", userIdOne));
-        }
-
-        if (!userStorage.isKeyPresent(userIdTwo)) {
-            throw new UserNotFoundException(String.format("getCommonFriends: Пользователь с id = %d не найден в " +
-                                            "хранилище.", userIdTwo));
-        }
+        getUser(userIdOne);
+        getUser(userIdTwo);
 
         Optional<Friends> wrappedFriendsOne = friendsStorage.get(userIdOne);
         Optional<Friends> wrappedFriendsTwo = friendsStorage.get(userIdTwo);
@@ -230,9 +208,7 @@ public class UserService {
      * @throws UserNotFoundException    генерируется если пользователя с идентификатором userId нет в хранилище;
      */
     public Collection<User> getUserFriends(long userId) {
-        if (!userStorage.isKeyPresent(userId)) {
-            throw new UserNotFoundException(String.format("Пользователь с id = %d не найден в хранилище.", userId));
-        }
+        getUser(userId);
 
         Optional<Friends> wrappedFriends = friendsStorage.get(userId);
 
