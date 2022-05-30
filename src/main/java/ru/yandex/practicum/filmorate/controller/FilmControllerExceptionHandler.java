@@ -12,6 +12,8 @@ import ru.yandex.practicum.filmorate.logger.FilmControllerLogger;
 import ru.yandex.practicum.filmorate.service.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.service.UserNotFoundException;
 
+import javax.validation.ConstraintViolationException;
+
 @RestControllerAdvice(assignableTypes = {FilmController.class})
 public class FilmControllerExceptionHandler {
     private final Logger logger;
@@ -37,5 +39,11 @@ public class FilmControllerExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public void handleOtherExceptions(Throwable ex) {
         logger.error(ex.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public void handleConstraintViolationException(ConstraintViolationException ex) {
+        logger.info(ex.getMessage());
     }
 }

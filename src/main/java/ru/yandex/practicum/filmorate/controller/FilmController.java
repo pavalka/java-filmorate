@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import org.slf4j.Logger;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,8 +17,10 @@ import ru.yandex.practicum.filmorate.service.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.service.UserNotFoundException;
 
+import javax.validation.constraints.Positive;
 import java.util.Collection;
 
+@Validated
 @RestController
 public class FilmController {
     private static final String FILMS_PATH = "/films";
@@ -120,7 +123,7 @@ public class FilmController {
      * @return  список фильмов, отсортированных по убыванию количества лайков;
      */
     @GetMapping(FILMS_PATH + "/popular")
-    public Collection<Film> getPopularFilms(@RequestParam(defaultValue = "10") int count) {
+    public Collection<Film> getPopularFilms(@Positive @RequestParam(defaultValue = "10") int count) {
         return filmService.getTopNFilms(count);
     }
 }
