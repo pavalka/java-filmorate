@@ -6,7 +6,7 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
-import ru.yandex.practicum.filmorate.util.FilmIdGenerator;
+import ru.yandex.practicum.filmorate.util.IdGenerator;
 import ru.yandex.practicum.filmorate.validator.FilmValidator;
 
 import java.util.Collection;
@@ -18,15 +18,16 @@ import java.util.Collection;
 public class FilmService {
     private final FilmStorage filmStorage;
     private final UserStorage userStorage;
-    private final FilmIdGenerator idGenerator;
+    private final IdGenerator idGenerator;
 
     /**
      * Конструктор класса.
-     *  @param filmStorage   хранилище фильмов;
+     * @param filmStorage   хранилище фильмов;
      * @param userStorage   хранилище пользователей;
+     * @param idGenerator   генератор идентификаторов фильмов;
      */
     @Autowired
-    public FilmService(FilmStorage filmStorage, UserStorage userStorage, FilmIdGenerator idGenerator) {
+    public FilmService(FilmStorage filmStorage, UserStorage userStorage, IdGenerator idGenerator) {
         this.filmStorage = filmStorage;
         this.userStorage = userStorage;
         this.idGenerator = idGenerator;
