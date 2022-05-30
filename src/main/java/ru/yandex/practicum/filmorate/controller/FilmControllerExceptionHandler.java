@@ -26,24 +26,36 @@ public class FilmControllerExceptionHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public void handleValidationException(ValidationException ex) {
-        logger.warn(ex.getMessage());
+        logWarn(ex);
     }
 
     @ExceptionHandler(value = {UserNotFoundException.class, FilmNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public void handleUserNotFoundException(ElementNotFoundException ex) {
-        logger.warn(ex.getMessage());
+        logWarn(ex);
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public void handleOtherExceptions(Throwable ex) {
-        logger.error(ex.getMessage());
+        logError(ex);
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public void handleConstraintViolationException(ConstraintViolationException ex) {
-        logger.info(ex.getMessage());
+        logWarn(ex);
+    }
+
+    private void logWarn(Throwable ex) {
+        StackTraceElement[] stackTrace = ex.getStackTrace();
+        logger.warn("{}::{}.{} : {}", ex.getClass().getName(), stackTrace[0].getClassName(),
+               stackTrace[0].getMethodName(), ex.getMessage());
+    }
+
+    private void logError(Throwable ex) {
+        StackTraceElement[] stackTrace = ex.getStackTrace();
+        logger.error("{}::{}.{} : {}", ex.getClass().getName(), stackTrace[0].getClassName(),
+                stackTrace[0].getMethodName(), ex.getMessage());
     }
 }
