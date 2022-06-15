@@ -16,4 +16,5 @@ public class Film {
     private final String description;
     private final LocalDate releaseDate;
     private final int duration;
+    private int rate;
 }
