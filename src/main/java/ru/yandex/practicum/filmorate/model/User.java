@@ -8,10 +8,9 @@ import java.time.LocalDate;
 /**
  * Класс, объекты которого представляют в программе пользователей.
  */
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Data
-public class User {
-    private long id;
+public class User extends Id{
     @EqualsAndHashCode.Include private final String email;
     private final String login;
     private final String name;
