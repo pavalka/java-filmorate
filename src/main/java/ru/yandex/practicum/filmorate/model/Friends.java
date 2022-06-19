@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.model;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -9,13 +9,14 @@ import java.util.Set;
 /**
  * Класс описывает список друзей пользователя. Пользователь и его друзья задаются их идентификаторами.
  */
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Data
-public class Friends {
-    @EqualsAndHashCode.Include
-    private final long userId;
+@Getter
+@Setter
+public class Friends extends Id{
     private final Set<Long> friendsId = new HashSet<>();
 
+    public Friends(long id) {
+        setId(id);
+    }
     /**
      * Метод добавляет пользователя с идентификатором uid в список друзей.
      *
