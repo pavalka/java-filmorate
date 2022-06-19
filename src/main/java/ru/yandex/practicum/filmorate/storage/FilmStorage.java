@@ -7,7 +7,7 @@ import java.util.Collection;
 /**
  * Определяет функционал хранилища фильмов.
  */
-public interface FilmStorage extends Storage <Film, Long> {
+public interface FilmStorage extends Storage <Film> {
 
     /**
      * Метод возвращает список всех фильмов, находящихся в хранилище в виде Collection<>. Если в хранилище нет ни одного

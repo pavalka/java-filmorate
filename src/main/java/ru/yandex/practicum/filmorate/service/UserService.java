@@ -66,7 +66,7 @@ public class UserService {
 
         if (!userStorage.isUserPresent(user)) {
             user.setId(idGenerator.getNextId());
-            userStorage.put(user.getId(), user);
+            userStorage.put(user);
         } else {
             throw new UserWithSameEmailException(String.format("Пользователь с email = %s уже существует " +
                                                  "в хранилище.", user.getEmail()));
@@ -89,7 +89,7 @@ public class UserService {
         }
 
         getUser(user.getId());
-        userStorage.put(user.getId(), user);
+        userStorage.put(user);
     }
 
     /**
@@ -124,10 +124,10 @@ public class UserService {
         Friends friends = friendsStorage.get(userIdOne).orElseGet(() -> new Friends(userIdOne));
 
         friends.addFriend(userIdTwo);
-        friendsStorage.put(userIdOne, friends);
+        friendsStorage.put(friends);
         friends = friendsStorage.get(userIdTwo).orElseGet(() -> new Friends(userIdTwo));
         friends.addFriend(userIdOne);
-        friendsStorage.put(userIdTwo, friends);
+        friendsStorage.put(friends);
     }
 
     /**
@@ -153,13 +153,13 @@ public class UserService {
 
         friends = wrappedFriends.get();
         friends.deleteFriend(userIdTwo);
-        friendsStorage.put(userIdOne, friends);
+        friendsStorage.put(friends);
         wrappedFriends = friendsStorage.get(userIdTwo);
 
         if (wrappedFriends.isPresent()) {
             friends = wrappedFriends.get();
             friends.deleteFriend(userIdOne);
-            friendsStorage.put(userIdTwo, friends);
+            friendsStorage.put(friends);
         }
     }
 

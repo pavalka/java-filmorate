@@ -8,5 +8,5 @@ import ru.yandex.practicum.filmorate.storage.FriendsStorage;
  * Класс реализует функционал хранилища списка друзей пользователя.
  */
 @Component
-public class InMemoryFriendsStorage extends AbstractInMemoryStorage<Friends, Long> implements FriendsStorage {
+public class InMemoryFriendsStorage extends AbstractInMemoryStorage<Friends> implements FriendsStorage {
 }

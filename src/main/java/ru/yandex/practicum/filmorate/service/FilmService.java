@@ -57,7 +57,7 @@ public class FilmService {
         }
 
         film.setId(idGenerator.getNextId());
-        filmStorage.put(film.getId(), film);
+        filmStorage.put(film);
         return film;
     }
 
@@ -74,7 +74,7 @@ public class FilmService {
         }
 
         getFilm(film.getId());
-        filmStorage.put(film.getId(), film);
+        filmStorage.put(film);
     }
 
     /**
@@ -106,7 +106,7 @@ public class FilmService {
 
         Film film = getFilm(filmId);
         film.setRate(film.getRate() + 1);
-        filmStorage.put(filmId, film);
+        filmStorage.put(film);
     }
 
     /**
@@ -128,7 +128,7 @@ public class FilmService {
         Film film = getFilm(filmId);
 
         film.setRate(film.getRate() - 1);
-        filmStorage.put(filmId, film);
+        filmStorage.put(film);
     }
 
     /**
