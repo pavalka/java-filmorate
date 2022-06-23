@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Friends;
@@ -32,7 +33,9 @@ public class UserService {
      * @param idGenerator   генератор идентификаторов;
      */
     @Autowired
-    public UserService(UserStorage userStorage, FriendsStorage friendsStorage, IdGenerator idGenerator) {
+    public UserService(@Qualifier("inMemoryUserStorage") UserStorage userStorage,
+                       @Qualifier("inMemoryFriendsStorage") FriendsStorage friendsStorage,
+                       IdGenerator idGenerator) {
         this.userStorage = userStorage;
         this.friendsStorage = friendsStorage;
         this.idGenerator = idGenerator;
