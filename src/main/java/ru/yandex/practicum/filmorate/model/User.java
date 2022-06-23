@@ -26,4 +26,9 @@ public class User extends Id{
         }
         this.birthday = birthday;
     }
+
+    public User(long userId, String email, String login, String name, LocalDate birthday) {
+        this(email, login, name, birthday);
+        setId(userId);
+    }
 }
