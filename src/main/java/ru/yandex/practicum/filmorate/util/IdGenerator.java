@@ -22,4 +22,8 @@ public class IdGenerator {
     public IdGenerator(){
         id = 1;
     }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 }
