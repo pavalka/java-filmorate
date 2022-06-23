@@ -124,13 +124,8 @@ public class UserService {
         getUser(userIdOne);
         getUser(userIdTwo);
 
-        Friends friends = friendsStorage.get(userIdOne).orElseGet(() -> new Friends(userIdOne));
-
-        friends.addFriend(userIdTwo);
-        friendsStorage.put(friends);
-        friends = friendsStorage.get(userIdTwo).orElseGet(() -> new Friends(userIdTwo));
-        friends.addFriend(userIdOne);
-        friendsStorage.put(friends);
+        friendsStorage.addFriend(userIdOne, userIdTwo);
+        friendsStorage.addFriend(userIdTwo, userIdOne);
     }
 
     /**
@@ -147,23 +142,8 @@ public class UserService {
         getUser(userIdOne);
         getUser(userIdTwo);
 
-        Optional<Friends> wrappedFriends = friendsStorage.get(userIdOne);
-        Friends friends;
-
-        if (wrappedFriends.isEmpty()) {
-            return;
-        }
-
-        friends = wrappedFriends.get();
-        friends.deleteFriend(userIdTwo);
-        friendsStorage.put(friends);
-        wrappedFriends = friendsStorage.get(userIdTwo);
-
-        if (wrappedFriends.isPresent()) {
-            friends = wrappedFriends.get();
-            friends.deleteFriend(userIdOne);
-            friendsStorage.put(friends);
-        }
+        friendsStorage.deleteFriend(userIdOne, userIdTwo);
+        friendsStorage.deleteFriend(userIdTwo, userIdOne);
     }
 
     /**
