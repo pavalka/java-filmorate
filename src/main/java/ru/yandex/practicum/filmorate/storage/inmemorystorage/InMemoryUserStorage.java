@@ -10,7 +10,7 @@ import java.util.Collection;
 /**
  * Класс реализует хранение объектов класса User в ОЗУ.
  */
-@Component
+@Component("inMemoryUserStorage")
 public class InMemoryUserStorage extends AbstractInMemoryStorage<User> implements UserStorage {
 
      /**
