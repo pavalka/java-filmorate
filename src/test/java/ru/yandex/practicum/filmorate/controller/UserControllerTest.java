@@ -6,6 +6,7 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserNotFoundException;
 import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
 import ru.yandex.practicum.filmorate.storage.inmemorystorage.InMemoryFriendsStorage;
 import ru.yandex.practicum.filmorate.storage.inmemorystorage.InMemoryUserStorage;
 import ru.yandex.practicum.filmorate.util.IdGenerator;
@@ -24,7 +25,8 @@ class UserControllerTest {
 
     @BeforeEach
     public void runBeforeEachTest() {
-        userService = new UserService(new InMemoryUserStorage(), new InMemoryFriendsStorage(), new IdGenerator());
+        UserStorage userStorage = new InMemoryUserStorage();
+        userService = new UserService(userStorage, new InMemoryFriendsStorage(userStorage), new IdGenerator());
     }
 
     @Test

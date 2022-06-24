@@ -1,24 +1,36 @@
 package ru.yandex.practicum.filmorate.storage;
 
-import ru.yandex.practicum.filmorate.model.Friends;
+import ru.yandex.practicum.filmorate.model.User;
+
+import java.util.Collection;
 
 /**
  * Определяет функционал хранилища списка друзей пользователя.
  */
-public interface FriendsStorage extends Storage<Friends> {
+public interface FriendsStorage {
     /**
-     * Метод добавляет пользователя с идентификатором friendId в список друзей пользователя с идентификатором userId.
+     * Метод добавляет пользователя friend в список друзей пользователя user.
      *
-     * @param userId   идентификатор пользователя в список друзей которого, нужно добавить друга;
-     * @param friendId  идентификатор пользователя, которго добавляем в список друзей;
+     * @param user   пользователь, в список друзей которого, нужно добавить друга;
+     * @param friend пользователь, которого нужно добавить в список друзей пользователя user;
      */
-    void addFriend(long userId, long friendId);
+    void addFriend(User user, User friend);
 
     /**
-     * Метод удаляет пользователя с идентификатором friendId из списка друзей поьзователя с идентификатором userId.
+     * Метод удаляет пользователя friend из списка друзей поьзователя user.
      *
-     * @param userId    идентификатор пользователя из списка друзей которого, нужно удалить друга
-     * @param friendId  идентификатор пользователя, которого нужно удалить из списка друзей;
+     * @param user  пользователь, из списка друзей которого нужно удалить друга;
+     * @param friend    пользователь, которого нужно удалить из списка друзей пользователя user;
      */
-    void deleteFriend(long userId, long friendId);
+    void deleteFriend(User user, User friend);
+
+    /**
+     * Метод возвращает список друзей пользователя user. Если у пользователя нет ни одного друга, то метод вернет
+     * пустой список.
+     *
+     * @param user  пользователь, список друзей которого нужно получить;
+     * @return  список друзей пользователя user;
+     *          пустой список, если у пользователя нет ни одного друга.
+     */
+    Collection<User> getFriends(User user);
 }

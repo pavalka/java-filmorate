@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.storage.indbstorage;
 
-import com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -9,16 +8,19 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import ru.yandex.practicum.filmorate.model.Friends;
+import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.FriendsStorage;
 
-import java.util.Optional;
+import java.time.LocalDate;
 
 @SpringBootTest
 @AutoConfigureTestDatabase
 class InDbFriendsStorageTest {
     private final FriendsStorage friendsStorage;
     private final JdbcTemplate jdbcTemplate;
+    private final static User USER_ONE = new User(1, "user1@email.ru", "user1", "name 1", LocalDate.of(1980, 2, 3));
+    private final static User USER_TWO = new User(2, "user2@email.ru", "user2", "name 2", LocalDate.of(1990, 6, 24));
+    private final static User USER_THREE = new User(3, "user3@email.ru", "user3", "name 3", LocalDate.of(1995, 1, 1));
 
     private void addUsersToDb() {
         jdbcTemplate.update("INSERT INTO users VALUES (1, 'user1@email.ru', 'user1', 'name 1', DATE '1980-02-03')");
@@ -45,41 +47,38 @@ class InDbFriendsStorageTest {
     @Test
     void addFriendShouldAddFriend() {
         addUsersToDb();
-        Assertions.assertDoesNotThrow(() -> friendsStorage.addFriend(1, 2));
+        Assertions.assertDoesNotThrow(() -> friendsStorage.addFriend(USER_ONE, USER_TWO));
 
-        Optional<Friends> wrappedFriends = friendsStorage.get(1);
+        var friends = friendsStorage.getFriends(USER_ONE);
 
-        Assertions.assertTrue(wrappedFriends.isPresent());
-        Assertions.assertEquals(1, wrappedFriends.get().getFriendsId().size());
-        Assertions.assertTrue(wrappedFriends.get().getFriendsId().contains(2L));
+        Assertions.assertEquals(1, friends.size());
+        Assertions.assertTrue(friends.contains(USER_TWO));
     }
 
     @Test
     void deleteFriendShouldDeleteFriend() {
         addUsersToDb();
         addFriendsToDb();
+        Assertions.assertDoesNotThrow(() -> friendsStorage.deleteFriend(USER_TWO, USER_ONE));
 
-        Assertions.assertDoesNotThrow(() -> friendsStorage.deleteFriend(2, 1));
+        var friends = friendsStorage.getFriends(USER_TWO);
 
-        Optional<Friends> wrappedFriends = friendsStorage.get(2);
-
-        Assertions.assertTrue(wrappedFriends.isEmpty());
+        Assertions.assertTrue(friends.isEmpty());
     }
 
     @Test
     void deleteFriendShouldNotDeleteFriendWhenUserIsWrong() {
         addUsersToDb();
         addFriendsToDb();
+        Assertions.assertDoesNotThrow(() -> friendsStorage.deleteFriend(USER_THREE, USER_TWO));
 
-        Assertions.assertDoesNotThrow(() -> friendsStorage.deleteFriend(3, 2));
+        var friends = friendsStorage.getFriends(USER_ONE);
 
-        Optional<Friends> wrappedFriends = friendsStorage.get(1);
-
-        Assertions.assertTrue(wrappedFriends.isPresent());
-        Assertions.assertEquals(1, wrappedFriends.get().getFriendsId().size());
-        wrappedFriends = friendsStorage.get(2);
-        Assertions.assertTrue(wrappedFriends.isPresent());
-        Assertions.assertEquals(1, wrappedFriends.get().getFriendsId().size());
+        Assertions.assertEquals(1, friends.size());
+        Assertions.assertTrue(friends.contains(USER_TWO));
+        friends = friendsStorage.getFriends(USER_TWO);
+        Assertions.assertEquals(1, friends.size());
+        Assertions.assertTrue(friends.contains(USER_ONE));
     }
 
     @Test
@@ -87,55 +86,32 @@ class InDbFriendsStorageTest {
         addUsersToDb();
         addFriendsToDb();
 
-        Assertions.assertDoesNotThrow(() -> friendsStorage.deleteFriend(1, 3));
+        Assertions.assertDoesNotThrow(() -> friendsStorage.deleteFriend(USER_ONE, USER_THREE));
 
-        Optional<Friends> wrappedFriends = friendsStorage.get(1);
+        var friends = friendsStorage.getFriends(USER_ONE);
 
-        Assertions.assertTrue(wrappedFriends.isPresent());
-        Assertions.assertEquals(1, wrappedFriends.get().getFriendsId().size());
-        wrappedFriends = friendsStorage.get(2);
-        Assertions.assertTrue(wrappedFriends.isPresent());
-        Assertions.assertEquals(1, wrappedFriends.get().getFriendsId().size());
+        Assertions.assertEquals(1, friends.size());
+        Assertions.assertTrue(friends.contains(USER_TWO));
+        friends = friendsStorage.getFriends(USER_TWO);
+        Assertions.assertEquals(1, friends.size());
+        Assertions.assertTrue(friends.contains(USER_ONE));
     }
 
     @Test
-    void put() {
-        addUsersToDb();
+    void getFriendsShouldReturnEmptyCollection() {
+        var friends = Assertions.assertDoesNotThrow(() -> friendsStorage.getFriends(USER_ONE));
 
-        Optional<Friends> wrappedFriends = friendsStorage.get(1);
-
-        Assertions.assertTrue(wrappedFriends.isEmpty());
-        wrappedFriends = friendsStorage.get(2);
-        Assertions.assertTrue(wrappedFriends.isEmpty());
-
-        Friends friends = new Friends(1);
-
-        friends.addFriend(2);
-        Assertions.assertDoesNotThrow(() -> friendsStorage.put(friends));
-        wrappedFriends = friendsStorage.get(1);
-        Assertions.assertTrue(wrappedFriends.isPresent());
-        Assertions.assertEquals(1, wrappedFriends.get().getFriendsId().size());
-        Assertions.assertTrue(wrappedFriends.get().getFriendsId().contains(2L));
-        wrappedFriends = friendsStorage.get(2);
-        Assertions.assertTrue(wrappedFriends.isEmpty());
+        Assertions.assertTrue(friends.isEmpty());
     }
 
     @Test
-    void getShouldReturnEmptyOptional() {
-        Optional<Friends> wrappedFriends = Assertions.assertDoesNotThrow(() -> friendsStorage.get(1));
-
-        Assertions.assertTrue(wrappedFriends.isEmpty());
-    }
-
-    @Test
-    void getShouldReturnFriends() {
+    void getFriendsShouldReturnFriends() {
         addUsersToDb();
         addFriendsToDb();
 
-        Optional<Friends> wrappedFriends = Assertions.assertDoesNotThrow(() -> friendsStorage.get(1));
+        var friends = Assertions.assertDoesNotThrow(() -> friendsStorage.getFriends(USER_ONE));
 
-        Assertions.assertTrue(wrappedFriends.isPresent());
-        Assertions.assertEquals(1, wrappedFriends.get().getFriendsId().size());
-        Assertions.assertTrue(wrappedFriends.get().getFriendsId().contains(2L));
+        Assertions.assertEquals(1, friends.size());
+        Assertions.assertTrue(friends.contains(USER_TWO));
     }
 }
