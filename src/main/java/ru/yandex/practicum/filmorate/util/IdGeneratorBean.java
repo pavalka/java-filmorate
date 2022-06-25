@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.Scope;
+import ru.yandex.practicum.filmorate.storage.indbstorage.InDbFilmStorage;
 import ru.yandex.practicum.filmorate.storage.indbstorage.InDbUserStorage;
 
 /**
@@ -11,19 +12,27 @@ import ru.yandex.practicum.filmorate.storage.indbstorage.InDbUserStorage;
  */
 @Configuration
 public class IdGeneratorBean {
-    @Bean
+    @Bean(name = {"userIdGenerator", "filmIdGenerator"})
     @Scope("prototype")
     @Profile("in_memory_storage")
-    public IdGenerator generalIdGenerator() {
+    public IdGenerator idGenerator() {
         return new IdGenerator();
     }
 
-    @Bean
-    @Scope("prototype")
-    @Profile("in_db_prototype")
-    public IdGenerator dbIdGenerator(InDbUserStorage userStorage) {
+    @Bean(name = "userIdGenerator")
+    @Profile("in_db_storage")
+    public IdGenerator userIdGenerator(InDbUserStorage userStorage) {
         IdGenerator idGenerator = new IdGenerator();
         idGenerator.setId(userStorage.getMaxUserId().orElse(1L));
         return idGenerator;
     }
+
+    @Bean(name = "filmIdGenerator")
+    @Profile("in_db_storage")
+    public IdGenerator filmIdGenerator(InDbFilmStorage filmStorage) {
+        IdGenerator idGenerator = new IdGenerator();
+        idGenerator.setId(filmStorage.getMaxFilmId().orElse(1L));
+        return idGenerator;
+    }
 }
+
