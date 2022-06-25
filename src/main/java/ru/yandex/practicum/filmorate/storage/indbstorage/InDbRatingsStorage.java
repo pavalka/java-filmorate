@@ -4,12 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.storage.RatingsStorage;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -19,6 +19,9 @@ import java.util.stream.Collectors;
 @Profile("in_db_storage")
 public class InDbRatingsStorage implements RatingsStorage {
     private static final String REQUEST_ALL_RATINGS = "SELECT * FROM ratings";
+
+    private static final String REQUEST_RATING_BY_ID =  "SELECT * FROM ratings " +
+                                                        "WHERE rating_id=?";
 
     private final JdbcTemplate ratingsStorage;
 
@@ -42,5 +45,23 @@ public class InDbRatingsStorage implements RatingsStorage {
     public Collection<Mpa> getAllRatings() {
         return ratingsStorage.queryForStream(REQUEST_ALL_RATINGS, (rs, num) -> new Mpa(rs.getInt("rating_id"),
                 rs.getString("name"))).collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    /**
+     * Метод возвращает райтинг фильма с идентификатором ratingId. Если рейтинг с таким идентификатором не найден, то
+     * метод вернет пустой Optional.
+     *
+     * @param ratingId идентификатор рейтинга фильма;
+     * @return райтинг фильма; пустой объект {@link Optional}, если рейтинг с таким идентификатором не найден.
+     */
+    @Override
+    public Optional<Mpa> getRatingById(int ratingId) {
+        return Optional.ofNullable(ratingsStorage.query(REQUEST_RATING_BY_ID, rs -> {
+            if (rs.next()) {
+                return new Mpa(rs.getInt("rating_id"), rs.getString("name"));
+            }
+
+            return null;
+        }, ratingId));
     }
 }
