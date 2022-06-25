@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.inmemorystorage;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.NullArgumentException;
 import ru.yandex.practicum.filmorate.model.User;
@@ -10,7 +11,8 @@ import java.util.Collection;
 /**
  * Класс реализует хранение объектов класса User в ОЗУ.
  */
-@Component("inMemoryUserStorage")
+@Profile("in_memory_storage")
+@Component
 public class InMemoryUserStorage extends AbstractInMemoryStorage<User> implements UserStorage {
 
      /**
