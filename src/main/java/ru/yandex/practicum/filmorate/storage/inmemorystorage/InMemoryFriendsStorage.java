@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.storage.inmemorystorage;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.FriendsStorage;
@@ -18,7 +19,8 @@ import java.util.stream.Collectors;
 /**
  * Класс реализует функционал хранилища списка друзей пользователя.
  */
-@Component("inMemoryFriendsStorage")
+@Profile("in_memory_storage")
+@Component
 public class InMemoryFriendsStorage implements FriendsStorage {
     private final Map<Long, Set<Long>> friendsStorage;
     private final UserStorage userStorage;
