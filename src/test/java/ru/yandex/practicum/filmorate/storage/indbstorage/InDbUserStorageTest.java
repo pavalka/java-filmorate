@@ -4,10 +4,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.ActiveProfiles;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
@@ -18,13 +18,12 @@ import java.util.Optional;
 
 @SpringBootTest
 @AutoConfigureTestDatabase
-@ActiveProfiles("in_db_storage")
 class InDbUserStorageTest {
     private final UserStorage userStorage;
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public InDbUserStorageTest(UserStorage userStorage, JdbcTemplate jdbcTemplate) {
+    public InDbUserStorageTest(@Qualifier("inDbUserStorage") UserStorage userStorage, JdbcTemplate jdbcTemplate) {
         this.userStorage = userStorage;
         this.jdbcTemplate = jdbcTemplate;
     }

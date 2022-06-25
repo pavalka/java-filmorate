@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.ActiveProfiles;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.FriendsStorage;
 
@@ -16,7 +15,6 @@ import java.time.LocalDate;
 
 @SpringBootTest
 @AutoConfigureTestDatabase
-@ActiveProfiles("in_db_storage")
 class InDbFriendsStorageTest {
     private final FriendsStorage friendsStorage;
     private final JdbcTemplate jdbcTemplate;

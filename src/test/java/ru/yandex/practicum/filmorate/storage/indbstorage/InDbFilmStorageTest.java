@@ -4,10 +4,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.ActiveProfiles;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
@@ -19,13 +19,12 @@ import java.util.Set;
 
 @SpringBootTest
 @AutoConfigureTestDatabase
-@ActiveProfiles("in_db_storage")
 class InDbFilmStorageTest {
     private final FilmStorage filmStorage;
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public InDbFilmStorageTest(FilmStorage filmStorage, JdbcTemplate jdbcTemplate) {
+    public InDbFilmStorageTest(@Qualifier("inDbFilmStorage") FilmStorage filmStorage, JdbcTemplate jdbcTemplate) {
         this.filmStorage = filmStorage;
         this.jdbcTemplate = jdbcTemplate;
     }

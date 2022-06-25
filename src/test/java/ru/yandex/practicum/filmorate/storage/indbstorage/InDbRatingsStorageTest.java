@@ -5,13 +5,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.storage.RatingsStorage;
 
 @SpringBootTest
 @AutoConfigureTestDatabase
-@ActiveProfiles("in_db_storage")
 class InDbRatingsStorageTest {
     private final RatingsStorage ratingsStorage;
 
