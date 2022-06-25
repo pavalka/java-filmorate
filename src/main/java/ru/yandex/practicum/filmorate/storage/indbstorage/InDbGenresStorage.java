@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.storage.GenresStorage;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -20,6 +21,9 @@ public class InDbGenresStorage implements GenresStorage {
     private final JdbcTemplate genresStorage;
 
     private static final String REQUEST_ALL_GENRES =    "SELECT * FROM genres";
+
+    private static final String REQUEST_GENRE_BY_ID =   "SELECT * FROM genres " +
+                                                        "WHERE genre_id=?";
     /**
      * Конструктор класса.
      *
@@ -40,5 +44,23 @@ public class InDbGenresStorage implements GenresStorage {
     public Collection<Genre> getAllGenres() {
         return genresStorage.queryForStream(REQUEST_ALL_GENRES, (rs, num) -> new Genre(rs.getInt("genre_id"),
                 rs.getString("name"))).collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    /**
+     * Метод возвращает жанр с идентификатором genreId. Если жанр с таким идентификатором не найден метод вренет пустой
+     * Optional.
+     *
+     * @param genreId идентификатор жанра;
+     * @return жанр с заданным идентификатором; пустой объект Optional, если жанр с ижентификатором genreId не найден.
+     */
+    @Override
+    public Optional<Genre> getGenreById(int genreId) {
+        return Optional.ofNullable(genresStorage.query(REQUEST_GENRE_BY_ID, rs-> {
+            if (rs.next()) {
+                return new Genre(rs.getInt("genre_id"), rs.getString("name"));
+            }
+
+            return null;
+        }, genreId));
     }
 }
