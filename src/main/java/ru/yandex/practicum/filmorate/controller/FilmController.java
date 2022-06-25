@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import org.slf4j.Logger;
+import org.springframework.context.annotation.Profile;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,7 @@ import ru.yandex.practicum.filmorate.service.UserNotFoundException;
 import javax.validation.constraints.Positive;
 import java.util.Collection;
 
+@Profile({"in_memory_storage", "in_db_storage"})
 @Validated
 @RestController
 public class FilmController {
