@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.ActiveProfiles;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.FilmGenreStorage;
 
@@ -15,6 +16,7 @@ import java.util.Set;
 
 @SpringBootTest
 @AutoConfigureTestDatabase
+@ActiveProfiles("in_db_storage")
 class InDbFilmGenreStorageTest {
     private final FilmGenreStorage filmGenreStorage;
     private final JdbcTemplate jdbcTemplate;
