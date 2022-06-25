@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.storage.indbstorage;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.NullArgumentException;
@@ -24,7 +25,8 @@ import java.util.stream.Stream;
 /**
  * Класс реализует интерфейс FilmStorage и использует БД в качестве кранилища фильмов.
  */
-@Component("inDbFilmStorage")
+@Profile("in_db_storage")
+@Component
 public class InDbFilmStorage implements FilmStorage {
     private static final String REQUEST_FILM_BY_ID =    "SELECT f.film_id AS f_id, " +
                                                         "       f.name AS f_name, " +
@@ -62,6 +64,8 @@ public class InDbFilmStorage implements FilmStorage {
                                                         "LEFT JOIN ratings AS r ON f.rating_id=r.rating_id";
 
     private static final String PUT_FILM =  "MERGE INTO films VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+    private static final String REQUEST_MAX_FILM_ID =   "SELECT max(film_id) AS max_id FROM films";
 
     private final JdbcTemplate filmsStorage;
     private final FilmGenreStorage filmGenreStorage;
@@ -146,6 +150,20 @@ public class InDbFilmStorage implements FilmStorage {
         wrappedFilm.ifPresent(film -> film.setGenres(filmGenreStorage.getGenresForFilmByFilmId(key)));
 
         return wrappedFilm;
+    }
+
+    /**
+     * Метод возвращает наибольшее значение идентификатора фильма из БД.
+     *
+     * @return  максимальное значение идентификатора фильма.
+     */
+    public Optional<Long> getMaxFilmId() {
+        return Optional.ofNullable(filmsStorage.query(REQUEST_MAX_FILM_ID, rs -> {
+            if (rs.next()) {
+                return rs.getLong("max_id");
+            }
+            return null;
+        }));
     }
 
     private Film createFilmFromResultSet(ResultSet rs) throws SQLException {
