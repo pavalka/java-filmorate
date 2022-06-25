@@ -13,22 +13,20 @@ import java.time.LocalDate;
 public class User extends Id{
     @EqualsAndHashCode.Include private final String email;
     private final String login;
-    private final String name;
     private final LocalDate birthday;
+    private String name;
 
-    public User(String email, String login, String name, LocalDate birthday) {
+
+    public User(String email, String login,  LocalDate birthday) {
         this.email = email;
         this.login = login;
-        if (name.isBlank()) {
-            this.name = login;
-        } else {
-            this.name = name;
-        }
+        this.name = login;
         this.birthday = birthday;
     }
 
-    public User(long userId, String email, String login, String name, LocalDate birthday) {
-        this(email, login, name, birthday);
-        setId(userId);
+    public void setName(String name) {
+        if (name != null && !name.isBlank()) {
+            this.name = name;
+        }
     }
 }

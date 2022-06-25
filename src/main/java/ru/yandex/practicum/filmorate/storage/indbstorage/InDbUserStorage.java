@@ -67,8 +67,11 @@ public class InDbUserStorage implements UserStorage {
     public Optional<User> get(long key) {
         return Optional.ofNullable(userStorage.query(REQUEST_USER_BY_ID, rs -> {
             if (rs.next()) {
-                return new User(rs.getLong("user_id"), rs.getString("email"), rs.getString("login"), rs.getString("name"),
-                        rs.getDate("birthday").toLocalDate());
+                var user =new User(rs.getString("email"), rs.getString("login"),
+                              rs.getDate("birthday").toLocalDate());
+                user.setId(rs.getLong("user_id"));
+                user.setName(rs.getString("name"));
+                return user;
             }
 
             return null;
@@ -84,9 +87,14 @@ public class InDbUserStorage implements UserStorage {
      */
     @Override
     public Collection<User> getAllUsers() {
-        return userStorage.queryForStream(REQUEST_ALL_USERS, (rs, num) -> new User (rs.getLong("user_id"),
-                rs.getString("email"), rs.getString("login"), rs.getString("name"), rs.getDate("birthday")
-                .toLocalDate())).collect(Collectors.toCollection(ArrayList::new));
+        return userStorage.queryForStream(REQUEST_ALL_USERS, (rs, num) -> {
+            var user= new User (rs.getString("email"), rs.getString("login"),
+                      rs.getDate("birthday").toLocalDate());
+
+            user.setId(rs.getLong("user_id"));
+            user.setName(rs.getString("name"));
+            return user;
+        }).collect(Collectors.toCollection(ArrayList::new));
     }
 
     /**

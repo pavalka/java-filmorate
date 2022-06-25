@@ -77,8 +77,13 @@ public class InDbFriendsStorage implements FriendsStorage {
      */
     @Override
     public Collection<User> getFriends(User user) {
-        return friendsStorage.queryForStream(REQUEST_FRIENDS, (rs, num) -> new User(rs.getLong("u_id"),
-                rs.getString("email"), rs.getString("login"), rs.getString("name"), rs.getDate("birthday")
-                .toLocalDate()), user.getId()).collect(Collectors.toCollection(ArrayList::new));
+        return friendsStorage.queryForStream(REQUEST_FRIENDS, (rs, num) -> {
+            var newUser = new User(rs.getString("email"), rs.getString("login"),
+                          rs.getDate("birthday").toLocalDate());
+
+            newUser.setId(rs.getLong("u_id"));
+            newUser.setName(rs.getString("name"));
+            return newUser;
+        }, user.getId()).collect(Collectors.toCollection(ArrayList::new));
     }
 }

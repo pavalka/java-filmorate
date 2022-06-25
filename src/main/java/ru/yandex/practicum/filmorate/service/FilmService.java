@@ -6,7 +6,11 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.GenresStorage;
+import ru.yandex.practicum.filmorate.storage.RatingsStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 import ru.yandex.practicum.filmorate.util.IdGenerator;
 import ru.yandex.practicum.filmorate.validator.FilmValidator;
@@ -22,19 +26,25 @@ public class FilmService {
     private final FilmStorage filmStorage;
     private final UserStorage userStorage;
     private final IdGenerator idGenerator;
+    private final RatingsStorage ratingsStorage;
+    private final GenresStorage genresStorage;
 
     /**
      * Конструктор класса.
      * @param filmStorage   хранилище фильмов;
      * @param userStorage   хранилище пользователей;
+     * @param ratingsStorage    хранилище рейтингов;
+     * @param genresStorage хранилище жанров;
      * @param idGenerator   генератор идентификаторов фильмов;
      */
     @Autowired
-    public FilmService(FilmStorage filmStorage, UserStorage userStorage,
-                       @Qualifier("filmIdGenerator") IdGenerator idGenerator) {
+    public FilmService(FilmStorage filmStorage, UserStorage userStorage, RatingsStorage ratingsStorage,
+                       GenresStorage genresStorage, @Qualifier("filmIdGenerator") IdGenerator idGenerator) {
         this.filmStorage = filmStorage;
         this.userStorage = userStorage;
         this.idGenerator = idGenerator;
+        this.ratingsStorage = ratingsStorage;
+        this.genresStorage = genresStorage;
     }
 
     /**
@@ -90,9 +100,13 @@ public class FilmService {
      * @throws FilmNotFoundException    генерируется если фильм с идентификатором filmId не найден в хранилище фильмов;
      */
     public Film getFilm(long filmId) {
-        return filmStorage.get(filmId).orElseThrow(() -> new FilmNotFoundException(
+        Film film = filmStorage.get(filmId).orElseThrow(() -> new FilmNotFoundException(
                 String.format("Фильм с id = %d не найден", filmId))
                 );
+        if (film.getGenres().isEmpty()) {
+            film.setGenres(null);
+        }
+        return film;
     }
 
     /**
@@ -144,5 +158,50 @@ public class FilmService {
      */
     public Collection<Film> getTopNFilms(int size) {
         return filmStorage.getTopFilms(size);
+    }
+
+    /**
+     * Метод возвращает список всех жанров вхранилище. Если в хранилище жанров нет, то метод вернет пустой список.
+     *
+     * @return  список всех жанров вхранилище; пустой список, если в хранилище жанров нет.
+     */
+    public Collection<Genre> getAllGenres() {
+        return genresStorage.getAllGenres();
+    }
+
+    /**
+     * Метод возвращает жанр с идентификатором genreId. Если жанр с таким идентификатором не найден, то будет
+     * сгенерировано исключение {@link GenreNotFoundException}.
+     *
+     * @param genreId   идентификатор жанра;
+     * @return  жанр с идентификатором genreId;
+     * @throws GenreNotFoundException   генерируется, если жанр с идентификатором genreId не найден.
+     */
+    public Genre getGenreById(int genreId) {
+        return genresStorage.getGenreById(genreId).orElseThrow(() -> new GenreNotFoundException(
+                String.format("Жанр с идентификатором %d не найден", genreId)));
+    }
+
+    /**
+     * Метод возвращает список всех рейтингов в хранилище. Если в хранилище нет ни одного рейтинга, то метод вернет
+     * пустой список.
+     *
+     * @return  список всех рейтингов в хранилище; пустой список, если в хранилище нет ни одного рейтинга.
+     */
+    public Collection<Mpa> getAllRatings() {
+        return ratingsStorage.getAllRatings();
+    }
+
+    /**
+     * Метод возвращает рейтин фильма с идентификатором ratingId. Если рейтинг с таким идентификатором не найден, то
+     * будет сгенерировано исключение {@link RatingNotFoundException}.
+     *
+     * @param ratingId   идентификатор рейтинга;
+     * @return  рейтинг с идентификатором ratingId;
+     * @throws RatingNotFoundException   генерируется, если рейтинг с идентификатором ratingId не найден.
+     */
+    public Mpa getRatingById(int ratingId) {
+        return ratingsStorage.getRatingById(ratingId).orElseThrow(() -> new RatingNotFoundException(
+                String.format("Ретинг с id = %d не найден", ratingId)));
     }
 }

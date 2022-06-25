@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.logger.FilmControllerLogger;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.service.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.service.UserNotFoundException;
@@ -26,6 +28,8 @@ import java.util.Collection;
 @RestController
 public class FilmController {
     private static final String FILMS_PATH = "/films";
+    private static final String GENRE_PATH = "/genres";
+    private static final String RATINGS_PATH = "/mpa";
 
     private final FilmService filmService;
     private final Logger logger;
@@ -127,5 +131,53 @@ public class FilmController {
     @GetMapping(FILMS_PATH + "/popular")
     public Collection<Film> getPopularFilms(@Positive @RequestParam(defaultValue = "10") int count) {
         return filmService.getTopNFilms(count);
+    }
+
+    /**
+     * Метод возвращает список всех жанров, зарегистрированных в программе.
+     *
+     * @return список всех жанров.
+     */
+    @GetMapping(GENRE_PATH)
+    public Collection<Genre> getAllGenres() {
+        return filmService.getAllGenres();
+    }
+
+    /**
+     * Метод возвращает жанр с идентификатором genreId. Если жанр с таким идентификатором не найден, то метод
+     * сгенерирует исключение {@link ru.yandex.practicum.filmorate.service.GenreNotFoundException}.
+     *
+     * @param genreId идентификатор жанра;
+     * @return  жанр с идентификатором genreId;
+     * @throws ru.yandex.practicum.filmorate.service.GenreNotFoundException генерируется, если жанр с идентификатором
+     *         genreId не найден.
+     */
+    @GetMapping(GENRE_PATH + "/{id}")
+    public Genre getGenre(@PathVariable("id") int genreId) {
+        return filmService.getGenreById(genreId);
+    }
+
+    /**
+     * Метод возвращает спиок всех рейтингов, зарегестрированных в программе.
+     *
+     * @return  список всех рейтингов.
+     */
+    @GetMapping(RATINGS_PATH)
+    public Collection<Mpa> getAllRatings() {
+        return filmService.getAllRatings();
+    }
+
+    /**
+     * Метод возвращает рейтинг с идентификатором ratingId. Если рейтинг с таким идентификатором не найден, то метод
+     * сгенерирует исключение {@link ru.yandex.practicum.filmorate.service.RatingNotFoundException}.
+     *
+     * @param ratingId  идентификатор рейтинга;
+     * @return  рейтинг с идентификатором ratingId;
+     * @throws  ru.yandex.practicum.filmorate.service.RatingNotFoundException   генерируется, если рейтинг с
+     *          идентификатором ratingId не найден.
+     */
+    @GetMapping(RATINGS_PATH + "/{id}")
+    public Mpa getRating(@PathVariable("id") int ratingId) {
+        return filmService.getRatingById(ratingId);
     }
 }

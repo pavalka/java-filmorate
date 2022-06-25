@@ -43,7 +43,9 @@ class InDbUserStorageTest {
     void putAddUserToDataBase() {
         addUsersToDb();
 
-        User user = new User(3, "user3@email.ru", "user3", "user 3", LocalDate.of(1995, 7, 31));
+        User user = new User("user3@email.ru", "user3", LocalDate.of(1995, 7, 31));
+        user.setId(3);
+        user.setName("user 3");
 
         Assertions.assertDoesNotThrow(() -> userStorage.put(user));
 
@@ -57,7 +59,9 @@ class InDbUserStorageTest {
     void putUpdateUser() {
         addUsersToDb();
 
-        User user = new User(1, "user1@email.ru", "new_user1", "user 1", LocalDate.of(1980, 2, 3));
+        User user = new User("user1@email.ru", "new_user1", LocalDate.of(1980, 2, 3));
+        user.setId(1);
+        user.setName("user 1");
 
         Assertions.assertDoesNotThrow(() -> userStorage.put(user));
 
@@ -104,7 +108,9 @@ class InDbUserStorageTest {
     void isUserPresentReturnTrueWhenUserIsFound() {
         addUsersToDb();
 
-        User user = new User(1, "user1@email.ru", "user1", "user 1", LocalDate.of(1980, 2, 3));
+        User user = new User("user1@email.ru", "user1", LocalDate.of(1980, 2, 3));
+        user.setId(1);
+        user.setName("user 1");
         boolean isUserPresent = Assertions.assertDoesNotThrow(() -> userStorage.isUserPresent(user));
 
         Assertions.assertTrue(isUserPresent);
@@ -114,7 +120,9 @@ class InDbUserStorageTest {
     void isUserPresentReturnFalseWhenUserIsNotFound() {
         addUsersToDb();
 
-        User user = new User(5, "user5@email.ru", "user5", "user 5", LocalDate.of(1980, 2, 3));
+        User user = new User("user5@email.ru", "user5", LocalDate.of(1980, 2, 3));
+        user.setId(5);
+        user.setName("user 5");
         boolean isUserPresent = Assertions.assertDoesNotThrow(() -> userStorage.isUserPresent(user));
 
         Assertions.assertFalse(isUserPresent);

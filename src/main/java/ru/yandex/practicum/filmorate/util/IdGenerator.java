@@ -11,11 +11,7 @@ public class IdGenerator {
      * @return  значение идентификатора.
      */
     public long getNextId() {
-        return id++;
-    }
-
-    public IdGenerator(){
-        id = 1;
+        return ++id;
     }
 
     public void setId(long id) {

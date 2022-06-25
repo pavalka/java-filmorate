@@ -11,6 +11,8 @@ import ru.yandex.practicum.filmorate.exception.ElementNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.logger.FilmControllerLogger;
 import ru.yandex.practicum.filmorate.service.FilmNotFoundException;
+import ru.yandex.practicum.filmorate.service.GenreNotFoundException;
+import ru.yandex.practicum.filmorate.service.RatingNotFoundException;
 import ru.yandex.practicum.filmorate.service.UserNotFoundException;
 
 import javax.validation.ConstraintViolationException;
@@ -31,7 +33,8 @@ public class FilmControllerExceptionHandler {
         logWarn(ex);
     }
 
-    @ExceptionHandler(value = {UserNotFoundException.class, FilmNotFoundException.class})
+    @ExceptionHandler(value = {UserNotFoundException.class, FilmNotFoundException.class, GenreNotFoundException.class,
+                               RatingNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public void handleUserNotFoundException(ElementNotFoundException ex) {
         logWarn(ex);

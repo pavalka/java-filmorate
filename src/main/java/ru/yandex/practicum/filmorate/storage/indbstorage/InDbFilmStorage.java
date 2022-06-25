@@ -125,7 +125,7 @@ public class InDbFilmStorage implements FilmStorage {
         }
 
         filmsStorage.update(PUT_FILM, item.getId(), item.getName(), item.getDescription(), item.getDuration(),
-                            item.getRate(), item.getRatings().getId(), item.getReleaseDate());
+                            item.getRate(), item.getMpa().getId(), item.getReleaseDate());
 
         filmGenreStorage.putGenresForFilm(item.getId(), item.getGenres());
     }
@@ -167,9 +167,11 @@ public class InDbFilmStorage implements FilmStorage {
     }
 
     private Film createFilmFromResultSet(ResultSet rs) throws SQLException {
-        return new Film(rs.getLong("f_id"), rs.getString("f_name"), rs.getString("f_description"),
-                rs.getDate("f_date").toLocalDate(), rs.getInt("f_duration"), rs.getInt("f_likes"),
-                new Mpa(rs.getInt("r_id"), rs.getString("r_name")),
-                null);
+        var film = new Film(rs.getString("f_name"), rs.getString("f_description"), rs.getDate("f_date").toLocalDate(),
+                   rs.getInt("f_duration"));
+        film.setId(rs.getLong("f_id"));
+        film.setRate(rs.getInt("f_likes"));
+        film.setMpa(new Mpa(rs.getInt("r_id"), rs.getString("r_name")));
+        return film;
     }
 }

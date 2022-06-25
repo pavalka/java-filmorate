@@ -4,7 +4,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -94,8 +93,11 @@ class InDbFilmStorageTest {
     @Test
     void putAddFilmToDb() {
         Set<Genre> genres = Set.of(new Genre(1, "Комедия"));
-        var film = new Film(1, "Film 1", "Description of Film 1", LocalDate.of(1990, 3, 20), 90, 5,
-                       new Mpa(2, "PG"), genres);
+        var film = new Film("Film 1", "Description of Film 1", LocalDate.of(1990, 3, 20), 90);
+        film.setId(1);
+        film.setRate(5);
+        film.setMpa(new Mpa(2, "PG"));
+        film.setGenres(genres);
 
         Assertions.assertDoesNotThrow(() -> filmStorage.put(film));
 
