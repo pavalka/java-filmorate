@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.indbstorage;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Mpa;
@@ -16,7 +15,6 @@ import java.util.stream.Collectors;
  * Класс реализует интерфейс RatingsStorage и использует БД для хранения списка рейтингов.
  */
 @Component
-@Profile("in_db_storage")
 public class InDbRatingsStorage implements RatingsStorage {
     private static final String REQUEST_ALL_RATINGS = "SELECT * FROM ratings";
 

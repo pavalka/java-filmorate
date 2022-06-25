@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.indbstorage;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -17,7 +16,6 @@ import java.util.stream.Collectors;
 /**
  * Класс реализует интерфейс FilmGenreStorage и использует БД для хранения данных.
  */
-@Profile("in_db_storage")
 @Component
 public class InDbFilmGenreStorage implements FilmGenreStorage {
     private static final String REQUEST_GENRES_FOR_FILM =   "SELECT g.genre_id AS id, " +

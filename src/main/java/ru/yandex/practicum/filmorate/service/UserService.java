@@ -2,7 +2,6 @@ package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
@@ -19,7 +18,6 @@ import java.util.stream.Collectors;
  * Класс, отвечающий за логику выполнения операций над пользователями.
  */
 @Service
-@Profile({"in_memory_storage", "in_db_storage"})
 public class UserService {
     private final UserStorage userStorage;
     private final FriendsStorage friendsStorage;
@@ -32,7 +30,8 @@ public class UserService {
      * @param idGenerator   генератор идентификаторов;
      */
     @Autowired
-    public UserService(UserStorage userStorage, FriendsStorage friendsStorage,
+    public UserService(@Qualifier("inDbUserStorage") UserStorage userStorage,
+                       @Qualifier("inDbFriendsStorage") FriendsStorage friendsStorage,
                        @Qualifier("userIdGenerator") IdGenerator idGenerator) {
         this.userStorage = userStorage;
         this.friendsStorage = friendsStorage;

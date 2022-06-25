@@ -2,7 +2,6 @@ package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -21,7 +20,6 @@ import java.util.Collection;
  * Класс, отвечающий за логику выполнения операций с фильмами.
  */
 @Service
-@Profile({"in_memory_storage", "in_db_storage"})
 public class FilmService {
     private final FilmStorage filmStorage;
     private final UserStorage userStorage;
@@ -38,7 +36,8 @@ public class FilmService {
      * @param idGenerator   генератор идентификаторов фильмов;
      */
     @Autowired
-    public FilmService(FilmStorage filmStorage, UserStorage userStorage, RatingsStorage ratingsStorage,
+    public FilmService(@Qualifier("inDbFilmStorage") FilmStorage filmStorage,
+                       @Qualifier("inDbUserStorage") UserStorage userStorage, RatingsStorage ratingsStorage,
                        GenresStorage genresStorage, @Qualifier("filmIdGenerator") IdGenerator idGenerator) {
         this.filmStorage = filmStorage;
         this.userStorage = userStorage;

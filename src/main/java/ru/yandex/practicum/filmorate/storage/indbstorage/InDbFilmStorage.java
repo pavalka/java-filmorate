@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.indbstorage;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.NullArgumentException;
@@ -25,8 +24,7 @@ import java.util.stream.Stream;
 /**
  * Класс реализует интерфейс FilmStorage и использует БД в качестве кранилища фильмов.
  */
-@Profile("in_db_storage")
-@Component
+@Component("inDbFilmStorage")
 public class InDbFilmStorage implements FilmStorage {
     private static final String REQUEST_FILM_BY_ID =    "SELECT f.film_id AS f_id, " +
                                                         "       f.name AS f_name, " +

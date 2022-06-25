@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.indbstorage;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.User;
@@ -14,8 +13,7 @@ import java.util.stream.Collectors;
 /**
  * Класс реализует интерфейс {@link FriendsStorage} и использует БД для хранения информации о друзьях.
  */
-@Profile("in_db_storage")
-@Component
+@Component("inDbFriendsStorage")
 public class InDbFriendsStorage implements FriendsStorage {
     private static final String ADD_FRIEND =    "MERGE INTO friends (user_id, friend_id) " +
                                                 "VALUES (?, ?)";

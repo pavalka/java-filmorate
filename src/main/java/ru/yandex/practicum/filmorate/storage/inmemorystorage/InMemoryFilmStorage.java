@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.storage.inmemorystorage;
 
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
@@ -12,8 +11,7 @@ import java.util.stream.Collectors;
 /**
  * Класс реализует хранение объектов класса Film в ОЗУ.
  */
-@Profile("in_memory_storage")
-@Component
+@Component("inMemoryFilmStorage")
 public class InMemoryFilmStorage extends AbstractInMemoryStorage<Film> implements FilmStorage {
 
     /**

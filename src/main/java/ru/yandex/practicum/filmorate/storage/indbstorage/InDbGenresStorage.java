@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.indbstorage;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Genre;
@@ -16,7 +15,6 @@ import java.util.stream.Collectors;
  * Класс реализует интерфейс {@link GenresStorage} использует БД для храниния жанров.
  */
 @Component
-@Profile("in_db_storage")
 public class InDbGenresStorage implements GenresStorage {
     private final JdbcTemplate genresStorage;
 

@@ -2,7 +2,6 @@ package ru.yandex.practicum.filmorate.controller;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -17,7 +16,6 @@ import ru.yandex.practicum.filmorate.service.UserNotFoundException;
 
 import javax.validation.ConstraintViolationException;
 
-@Profile({"in_memory_storage", "in_db_storage"})
 @RestControllerAdvice(assignableTypes = {FilmController.class})
 public class FilmControllerExceptionHandler {
     private final Logger logger;

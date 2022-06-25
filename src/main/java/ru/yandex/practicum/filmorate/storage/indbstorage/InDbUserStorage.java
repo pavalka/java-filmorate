@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.indbstorage;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.User;
@@ -15,8 +14,7 @@ import java.util.stream.Collectors;
 /**
  * Класс реализует интерфейс UserStorage и использует БД для хранения пользователей.
  */
-@Profile("in_db_storage")
-@Component
+@Component("inDbUserStorage")
 public class InDbUserStorage implements UserStorage {
     private final static String REQUEST_MAX_USER_ID = "SELECT MAX(user_id) AS max_id FROM users";
 
