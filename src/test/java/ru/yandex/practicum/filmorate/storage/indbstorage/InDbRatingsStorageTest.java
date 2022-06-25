@@ -28,4 +28,20 @@ class InDbRatingsStorageTest {
         Assertions.assertTrue(ratings.contains(new Mpa(1, "G")));
         Assertions.assertTrue(ratings.contains(new Mpa(4, "R")));
     }
+
+    @Test
+    void getRatingByIdShouldReturnRating() {
+        var rating = Assertions.assertDoesNotThrow(() -> ratingsStorage.getRatingById(2));
+
+        Assertions.assertTrue(rating.isPresent());
+        Assertions.assertEquals(2, rating.get().getId());
+        Assertions.assertEquals("PG", rating.get().getName());
+    }
+
+    @Test
+    void getRatingByIdShouldReturnEmptyOptional() {
+        var rating = Assertions.assertDoesNotThrow(() -> ratingsStorage.getRatingById(10));
+
+        Assertions.assertTrue(rating.isEmpty());
+    }
 }
