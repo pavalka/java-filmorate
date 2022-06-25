@@ -9,8 +9,6 @@ import org.springframework.test.context.ActiveProfiles;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.GenresStorage;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @SpringBootTest
 @AutoConfigureTestDatabase
 @ActiveProfiles("in_db_storage")
@@ -29,5 +27,21 @@ class InDbGenresStorageTest {
         Assertions.assertEquals(6, genres.size());
         Assertions.assertTrue(genres.contains(new Genre(1, "Комедия")));
         Assertions.assertTrue(genres.contains(new Genre(4, "Триллер")));
+    }
+
+    @Test
+    void getGenreByIdShouldReturnGenre() {
+        var genre = Assertions.assertDoesNotThrow(() -> genresStorage.getGenreById(3));
+
+        Assertions.assertTrue(genre.isPresent());
+        Assertions.assertEquals(3, genre.get().getId());
+        Assertions.assertEquals("Мультфильм", genre.get().getName());
+    }
+
+    @Test
+    void getGenreByIdShouldReturnEmptyOptional() {
+        var genre = Assertions.assertDoesNotThrow(() -> genresStorage.getGenreById(10));
+
+        Assertions.assertTrue(genre.isEmpty());
     }
 }
