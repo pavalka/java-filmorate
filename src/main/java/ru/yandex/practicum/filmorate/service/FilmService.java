@@ -102,7 +102,7 @@ public class FilmService {
         Film film = filmStorage.get(filmId).orElseThrow(() -> new FilmNotFoundException(
                 String.format("Фильм с id = %d не найден", filmId))
                 );
-        if (film.getGenres().isEmpty()) {
+        if (film.getGenres()!=null && film.getGenres().isEmpty()) {
             film.setGenres(null);
         }
         return film;
