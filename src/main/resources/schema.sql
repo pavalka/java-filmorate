@@ -14,8 +14,8 @@ CREATE TABLE IF NOT EXISTS genres (
 
 CREATE TABLE IF NOT EXISTS films (
     film_id BIGINT NOT NULL,
-    name VARCHAR(100) NOT NULL,
-    description VARCHAR(500) NOT NULL,
+    name VARCHAR(50) NOT NULL,
+    description VARCHAR(200) NOT NULL,
     duration INTEGER NOT NULL,
     likes INTEGER NOT NULL DEFAULT 0,
     rating_id INTEGER NOT NULL,
@@ -35,9 +35,9 @@ CREATE TABLE IF NOT EXISTS film_genre (
 
 CREATE TABLE IF NOT EXISTS users (
     user_id BIGINT NOT NULL,
-    email VARCHAR(50) NOT NULL,
-    login VARCHAR(50) NOT NULL,
-    name VARCHAR(50) NOT NULL,
+    email VARCHAR(30) NOT NULL,
+    login VARCHAR(30) NOT NULL,
+    name VARCHAR(30) NOT NULL,
     birthday DATE NOT NULL,
     CONSTRAINT pk_users PRIMARY KEY(user_id),
     CONSTRAINT uk_users_email UNIQUE(email)
