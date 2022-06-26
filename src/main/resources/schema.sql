@@ -1,13 +1,13 @@
 CREATE TABLE IF NOT EXISTS ratings (
     rating_id INTEGER GENERATED ALWAYS AS IDENTITY,
     name VARCHAR(12) NOT NULL,
-    CONSTRAINT pk_ratings PRIMARY KEY(rating_id),
+    CONSTRAINT pk_ratings PRIMARY KEY(rating_id)
 );
 
 CREATE TABLE IF NOT EXISTS genres (
     genre_id INTEGER GENERATED ALWAYS AS IDENTITY,
     name VARCHAR(20) NOT NULL,
-    CONSTRAINT pk_genres PRIMARY KEY(genre_id),
+    CONSTRAINT pk_genres PRIMARY KEY(genre_id)
 );
 
 CREATE TABLE IF NOT EXISTS films (
