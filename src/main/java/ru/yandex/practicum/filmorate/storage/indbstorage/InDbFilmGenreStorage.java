@@ -23,12 +23,15 @@ public class InDbFilmGenreStorage implements FilmGenreStorage {
                                                             "FROM (SELECT * FROM film_genre " +
                                                             "      WHERE film_id=?) AS fg " +
                                                             "LEFT JOIN genres AS g ON fg.genre_id=g.genre_id";
+
     private static final String REQUEST_GENRES_FOR_ALL_FILMS =  "SELECT fg.film_id AS f_id, " +
                                                                 "       g.genre_id AS id, " +
                                                                 "       g.name AS name " +
                                                                 "FROM film_genre AS fg " +
                                                                 "LEFT JOIN genres AS g ON fg.genre_id=g.genre_id";
+
     private static final String DELETE_GENRES_FOR_FILM = "DELETE FROM film_genre WHERE film_id=?";
+
     private static final String ADD_GENRE_FOR_FILM = "INSERT INTO film_genre VALUES (?, ?)";
 
     private final JdbcTemplate filmGenreStorage;
