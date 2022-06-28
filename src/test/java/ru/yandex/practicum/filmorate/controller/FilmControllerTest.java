@@ -24,7 +24,7 @@ class FilmControllerTest {
     @BeforeEach
     public void runBeforeEachTest() {
         filmService = new FilmService(new InMemoryFilmStorage(), new InMemoryUserStorage(), null, null,
-                new IdGenerator());
+                new IdGenerator(), null);
     }
 
     @Test
