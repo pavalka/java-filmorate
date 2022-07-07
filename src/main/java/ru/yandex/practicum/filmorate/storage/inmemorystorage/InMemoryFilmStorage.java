@@ -11,8 +11,8 @@ import java.util.stream.Collectors;
 /**
  * Класс реализует хранение объектов класса Film в ОЗУ.
  */
-@Component
-public class InMemoryFilmStorage extends AbstractInMemoryStorage<Film, Long> implements FilmStorage {
+@Component("inMemoryFilmStorage")
+public class InMemoryFilmStorage extends AbstractInMemoryStorage<Film> implements FilmStorage {
 
     /**
      * Метод возвращает список всех фильмов, находящихся в хранилище в виде Collection<>. Если в хранилище нет ни одного

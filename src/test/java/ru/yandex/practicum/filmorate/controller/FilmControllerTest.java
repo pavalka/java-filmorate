@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.service.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.storage.inmemorystorage.InMemoryFilmStorage;
@@ -22,7 +23,8 @@ class FilmControllerTest {
 
     @BeforeEach
     public void runBeforeEachTest() {
-        filmService = new FilmService(new InMemoryFilmStorage(), new InMemoryUserStorage(), new IdGenerator());
+        filmService = new FilmService(new InMemoryFilmStorage(), new InMemoryUserStorage(), null, null,
+                new IdGenerator(), null);
     }
 
     @Test
@@ -33,7 +35,9 @@ class FilmControllerTest {
     @Test
     void getAllFilmsShouldReturnFilmsCollectionWhenOneFilmIsAdded() {
         try {
-            filmService.addFilm(new Film("Test film", "Film description", LocalDate.of(2001, 2, 14), 90));
+            Film film = new Film("Test film", "Film description", LocalDate.of(2001, 2, 14), 90);
+            film.setMpa(new Mpa(1, "G"));
+            filmService.addFilm(film);
         } catch (ValidationException ex) {
             System.out.println(ex.getMessage());
         }
@@ -93,6 +97,7 @@ class FilmControllerTest {
     @Test
     void addFilmShouldAddFilm() {
         Film film = new Film("Test film", "Description", LocalDate.of(2001, 2, 14), 90);
+        film.setMpa(new Mpa(1, "G"));
         assertDoesNotThrow(() -> filmService.addFilm(film));
         assertEquals(1, filmService.getAllFilms().size());
     }
@@ -105,9 +110,11 @@ class FilmControllerTest {
     @Test
     void updateFilmShouldThrowExceptionWhenFilmIdIsWrong() {
         Film film = new Film("Test film", "Description", LocalDate.of(2001, 2, 14), 90);
+        film.setMpa(new Mpa(1, "G"));
         assertDoesNotThrow(() -> filmService.addFilm(film));
 
         Film newFilm = new Film("Test film", "Description - 1", LocalDate.of(2001, 2, 14), 90);
+        newFilm.setMpa(new Mpa(1, "G"));
         newFilm.setId(100000);
         assertThrows(FilmNotFoundException.class, () -> filmService.updateFilm(newFilm));
     }
@@ -115,8 +122,10 @@ class FilmControllerTest {
     @Test
     void updateFilmShouldUpdateFilm() {
         Film film = new Film("Test film", "Description", LocalDate.of(2001, 2, 14), 90);
+        film.setMpa(new Mpa(1, "G"));
         assertDoesNotThrow(() -> filmService.addFilm(film));
         Film newFilm = new Film("Test film", "Description-1", LocalDate.of(2001, 2, 14), 90);
+        newFilm.setMpa(new Mpa(1, "G"));
         newFilm.setId(film.getId());
         assertDoesNotThrow(() -> filmService.updateFilm(newFilm));
         for (Film currentFilm : filmService.getAllFilms()) {

@@ -1,19 +1,20 @@
 package ru.yandex.practicum.filmorate.storage;
 
+import ru.yandex.practicum.filmorate.model.Id;
+
 import java.util.Optional;
 
 /**
  * Интерфейс, описывающий функционал хранилища объектов клааса T.
  * @param <T> тип хранимых объектов.
  */
-public interface Storage <T, K>{
+public interface Storage <T extends Id>{
     /**
      * Метод добавляет item в хранилище.
      *
-     *  @param key  ключ, под которым будет сохранено item;
-     *  @param item объект для добавления в хранилище;
+     * @param item объект для добавления в хранилище;
      */
-    void put(K key, T item);
+    void put(T item);
 
     /**
      * Метод возвращает из хранилища объект с ключом key, обернутый в класс {@link Optional}. Если объект с
@@ -23,5 +24,5 @@ public interface Storage <T, K>{
      * @return объект с ключом key, обернутый в класс {@link Optional}.
      *         Если объект с ключом key не найден в хранилище, то в {@link Optional} будет помещен null
      */
-    Optional<T> get(K key);
+    Optional<T> get(long key);
 }

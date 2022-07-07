@@ -1,13 +1,8 @@
 package ru.yandex.practicum.filmorate.util;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 /**
  * Вспомогательный класс, используемый для получения идентификаторов для объектов классов User и Film.
  */
-@Component
-@Scope("prototype")
 public class IdGenerator {
     private long id;
 
@@ -16,10 +11,10 @@ public class IdGenerator {
      * @return  значение идентификатора.
      */
     public long getNextId() {
-        return id++;
+        return ++id;
     }
 
-    public IdGenerator(){
-        id = 1;
+    public void setId(long id) {
+        this.id = id;
     }
 }

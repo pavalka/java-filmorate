@@ -25,7 +25,7 @@ public class FilmValidator {
     public static boolean validate(Film film) {
         return !(film.getName().isBlank() || film.getDescription().isBlank() || film.getDescription().length()
                 > FilmValidator.MAX_DESCRIPTION_LENGTH || film.getReleaseDate().isBefore(MIN_FILM_DATE)
-                || film.getReleaseDate().isAfter(LocalDate.now()) || film.getDuration() < 0);
+                || film.getReleaseDate().isAfter(LocalDate.now()) || film.getDuration() < 0 || film.getMpa() == null);
     }
 
     private FilmValidator(){}

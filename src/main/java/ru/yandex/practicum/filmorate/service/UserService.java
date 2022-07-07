@@ -1,9 +1,9 @@
 package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
-import ru.yandex.practicum.filmorate.model.Friends;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.FriendsStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
@@ -12,8 +12,6 @@ import ru.yandex.practicum.filmorate.validator.UserValidator;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -27,12 +25,14 @@ public class UserService {
 
     /**
      * Конструктор класса.
-     *  @param userStorage   хранилище пользователей;
+     * @param userStorage   хранилище пользователей;
      * @param friendsStorage    хранилище списка друзей;
      * @param idGenerator   генератор идентификаторов;
      */
     @Autowired
-    public UserService(UserStorage userStorage, FriendsStorage friendsStorage, IdGenerator idGenerator) {
+    public UserService(@Qualifier("inDbUserStorage") UserStorage userStorage,
+                       @Qualifier("inDbFriendsStorage") FriendsStorage friendsStorage,
+                       @Qualifier("userIdGenerator") IdGenerator idGenerator) {
         this.userStorage = userStorage;
         this.friendsStorage = friendsStorage;
         this.idGenerator = idGenerator;
@@ -66,7 +66,7 @@ public class UserService {
 
         if (!userStorage.isUserPresent(user)) {
             user.setId(idGenerator.getNextId());
-            userStorage.put(user.getId(), user);
+            userStorage.put(user);
         } else {
             throw new UserWithSameEmailException(String.format("Пользователь с email = %s уже существует " +
                                                  "в хранилище.", user.getEmail()));
@@ -89,7 +89,7 @@ public class UserService {
         }
 
         getUser(user.getId());
-        userStorage.put(user.getId(), user);
+        userStorage.put(user);
     }
 
     /**
@@ -118,16 +118,7 @@ public class UserService {
      *                                  userIdTwo не найден в хранилище.
      */
     public void addFriend(long userIdOne, long userIdTwo) {
-        getUser(userIdOne);
-        getUser(userIdTwo);
-
-        Friends friends = friendsStorage.get(userIdOne).orElseGet(() -> new Friends(userIdOne));
-
-        friends.addFriend(userIdTwo);
-        friendsStorage.put(userIdOne, friends);
-        friends = friendsStorage.get(userIdTwo).orElseGet(() -> new Friends(userIdTwo));
-        friends.addFriend(userIdOne);
-        friendsStorage.put(userIdTwo, friends);
+        friendsStorage.addFriend(getUser(userIdOne), getUser(userIdTwo));
     }
 
     /**
@@ -141,26 +132,7 @@ public class UserService {
      * @throws UserNotFoundException    генерируется если одного из пользователей нет в хранилище;
      */
     public void deleteFriend(long userIdOne, long userIdTwo) {
-        getUser(userIdOne);
-        getUser(userIdTwo);
-
-        Optional<Friends> wrappedFriends = friendsStorage.get(userIdOne);
-        Friends friends;
-
-        if (wrappedFriends.isEmpty()) {
-            return;
-        }
-
-        friends = wrappedFriends.get();
-        friends.deleteFriend(userIdTwo);
-        friendsStorage.put(userIdOne, friends);
-        wrappedFriends = friendsStorage.get(userIdTwo);
-
-        if (wrappedFriends.isPresent()) {
-            friends = wrappedFriends.get();
-            friends.deleteFriend(userIdOne);
-            friendsStorage.put(userIdTwo, friends);
-        }
+        friendsStorage.deleteFriend(getUser(userIdOne), getUser(userIdTwo));
     }
 
     /**
@@ -174,26 +146,10 @@ public class UserService {
      * @throws UserNotFoundException    генерируется если одного или обоих пользователей нет в хранилище;
      */
     public Collection<User> getCommonFriends(long userIdOne, long userIdTwo) {
-        getUser(userIdOne);
-        getUser(userIdTwo);
+        Collection<User> userOneFriends = friendsStorage.getFriends(getUser(userIdOne));
+        Collection<User> userTwoFriends = friendsStorage.getFriends(getUser(userIdTwo));
 
-        Optional<Friends> wrappedFriendsOne = friendsStorage.get(userIdOne);
-        Optional<Friends> wrappedFriendsTwo = friendsStorage.get(userIdTwo);
-
-        if (wrappedFriendsOne.isEmpty() || wrappedFriendsTwo.isEmpty()) {
-            return new ArrayList<>();
-        }
-
-        Set<Long> friendsOne = wrappedFriendsOne.get().getFriendsId();
-        Set<Long> friendsTwo = wrappedFriendsTwo.get().getFriendsId();
-
-        if (friendsOne.size() > friendsTwo.size()) {
-            friendsOne = wrappedFriendsTwo.get().getFriendsId();
-            friendsTwo = wrappedFriendsOne.get().getFriendsId();
-        }
-
-        return friendsOne.stream().filter(friendsTwo::contains).map(userId -> userStorage.get(userId).get())
-                .collect(Collectors.toCollection(ArrayList::new));
+        return userOneFriends.stream().filter(userTwoFriends::contains).collect(Collectors.toCollection(ArrayList::new));
     }
 
     /**
@@ -207,15 +163,6 @@ public class UserService {
      * @throws UserNotFoundException    генерируется если пользователя с идентификатором userId нет в хранилище;
      */
     public Collection<User> getUserFriends(long userId) {
-        getUser(userId);
-
-        Optional<Friends> wrappedFriends = friendsStorage.get(userId);
-
-        if (wrappedFriends.isEmpty()) {
-            return new ArrayList<>();
-        }
-
-        return wrappedFriends.get().getFriendsId().stream().map(uid -> userStorage.get(uid).get())
-                .collect(Collectors.toCollection(ArrayList::new));
+        return friendsStorage.getFriends(getUser(userId));
     }
 }

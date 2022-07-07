@@ -8,23 +8,25 @@ import java.time.LocalDate;
 /**
  * Класс, объекты которого представляют в программе пользователей.
  */
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Data
-public class User {
-    private long id;
+public class User extends Id{
     @EqualsAndHashCode.Include private final String email;
     private final String login;
-    private final String name;
     private final LocalDate birthday;
+    private String name;
 
-    public User(String email, String login, String name, LocalDate birthday) {
+
+    public User(String email, String login,  LocalDate birthday) {
         this.email = email;
         this.login = login;
-        if (name.isBlank()) {
-            this.name = login;
-        } else {
+        this.name = login;
+        this.birthday = birthday;
+    }
+
+    public void setName(String name) {
+        if (name != null && !name.isBlank()) {
             this.name = name;
         }
-        this.birthday = birthday;
     }
 }

@@ -10,8 +10,8 @@ import java.util.Collection;
 /**
  * Класс реализует хранение объектов класса User в ОЗУ.
  */
-@Component
-public class InMemoryUserStorage extends AbstractInMemoryStorage<User, Long> implements UserStorage {
+@Component("inMemoryUserStorage")
+public class InMemoryUserStorage extends AbstractInMemoryStorage<User> implements UserStorage {
 
      /**
      * Метод возвращает список всех пользователей, находящихся в хранилище в виде Collection<>. Если в хранилище нет ни
